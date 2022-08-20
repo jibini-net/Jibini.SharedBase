@@ -1,4 +1,5 @@
 ﻿using Jibini.SharedBase.Util;
+using Jibini.SharedBase.Util.Extensions;
 
 namespace Jibini.SharedBase.Auth;
 
@@ -31,6 +32,6 @@ public class TenantPath : IRetrievablePath<ITenant, ISearchTenant, int>,
     public TenantPath(string basePath)
     {
         BasePath = basePath;
-        EndpointUri = Path.Combine(basePath, "Tenant");
+        EndpointUri = basePath.JoinUri("Tenant");
     }
 }

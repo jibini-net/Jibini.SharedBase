@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Jibini.SharedBase.Components\Jibini.SharedBase.Components.csproj" />
+    <ProjectReference Include="..\Jibini.SharedBase.LibAuth\Jibini.SharedBase.LibAuth.csproj" />
     <ProjectReference Include="..\Jibini.SharedBase.LibUtil\Jibini.SharedBase.LibUtil.csproj" />
   </ItemGroup>
 

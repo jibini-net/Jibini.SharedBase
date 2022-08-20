@@ -9,11 +9,11 @@ namespace Jibini.SharedBase.Util;
 /// </summary>
 public interface IRetrievablePath<T, TSearch, TKey>
 {
-    public string EndpointUri { get; }
+    string EndpointUri { get; }
 
-    public ApiPath Get => new(HttpMethod.Get, Path.Combine(EndpointUri, "{}"));
+    ApiPath Get => new(HttpMethod.Get, EndpointUri.JoinUri("{}"));
 
-    public ApiPath Search => new(HttpMethod.Get, Path.Combine(EndpointUri, "Search"));
+    ApiPath Search => new(HttpMethod.Get, EndpointUri.JoinUri("Search"));
 }
 
 /// <summary>
@@ -22,7 +22,7 @@ public interface IRetrievablePath<T, TSearch, TKey>
 public static class RetrievablePathExtensions
 {
     public static ApiPath Get<T, TSearch, TKey>(this IRetrievablePath<T, TSearch, TKey> it, TKey id) =>
-        it.Get.FillIn(id?.ToString() ?? "");
+        it.Get.FillIn(id);
 
     public static ApiPath Search<T, TSearch, TKey>(this IRetrievablePath<T, TSearch, TKey> it, TSearch args) =>
         it.Search.AddArgs(args);
@@ -33,11 +33,11 @@ public static class RetrievablePathExtensions
 /// </summary>
 public interface IModifiablePath<T>
 {
-    public string EndpointUri { get; }
+    string EndpointUri { get; }
 
-    public ApiPath Set => new(HttpMethod.Post, EndpointUri);
-
-    public ApiPath Patch => new(HttpMethod.Patch, Path.Combine(EndpointUri, "{}"));
+    ApiPath Set => new(HttpMethod.Post, EndpointUri);
+    
+    ApiPath Patch => new(HttpMethod.Patch, EndpointUri.JoinUri("{}"));
 }
 
 /// <summary>
@@ -57,8 +57,9 @@ public static class ModifiablePathExtensions
 /// </summary>
 public interface IDeletablePath<T>
 {
-    public string EndpointUri { get; }
-    public ApiPath Delete => new(HttpMethod.Delete, Path.Combine(EndpointUri, "{}"));
+    string EndpointUri { get; }
+
+    ApiPath Delete => new(HttpMethod.Delete, EndpointUri.JoinUri("{}"));
 }
 
 /// <summary>
@@ -67,7 +68,7 @@ public interface IDeletablePath<T>
 public static class DeletablePathExtensions
 {
     public static ApiPath Delete<T>(this IDeletablePath<T> it, object id) =>
-        it.Delete.FillIn(id.ToString() ?? "");
+        it.Delete.FillIn(id);
 }
 
 /// <summary>
@@ -83,7 +84,7 @@ public class ApiPath
 
     /// <summary>
     /// The fully qualified path of the API endpoint, with any empty path
-    /// parameters replaced with a placeholder ("{}").
+    /// parameters replaced with a placeholder ("<c>{}</c>").
     /// </summary>
     public string Path { get; private set; }
 
@@ -94,8 +95,8 @@ public class ApiPath
     }
 
     /// <summary>
-    /// Replaces the first empty placeholder ("{}") in the path with a real
-    /// parameter value.
+    /// Replaces the first empty placeholder ("<c>{}</c>") in the path with a
+    /// real parameter value.
     /// </summary>
     public ApiPath FillIn(object? value)
     {
@@ -115,15 +116,16 @@ public class ApiPath
             return this;
 
         var values = new Dictionary<string, object?>();
-        var fields = typeof(TArgs).GetFields()
+        var fields = typeof(TArgs)
+            .GetFields()
             .ToDictionary((it) => it.Name, (it) => it.GetValue(args)?.ToString());
 
         return new(Method, QueryHelpers.AddQueryString(Path, fields));
     }
 
     /// <summary>
-    /// Calls the API action via the correct method. If the method is "GET" or
-    /// "HEAD," any provided body content is discarded.
+    /// Calls the API action via the correct method. If the specific method is
+    /// <c>"GET"</c> or <c>"HEAD</c>," any provided body content is discarded.
     /// </summary>
     public async Task<T?> InvokeAsync<T>(object? body = null)
     {
@@ -136,15 +138,15 @@ public class ApiPath
                     : new StringContent(body.ToJson() ?? "")
             });
 
-        result.EnsureSuccessStatusCode();
         var json = await result.Content.ReadAsStringAsync();
+        result.EnsureSuccessStatusCode();
 
         return json.ParseTo<T>();
     }
 
     /// <summary>
-    /// Calls the API action via the correct method. If the method is "GET" or
-    /// "HEAD," any provided body content is discarded.
+    /// Calls the API action via the correct method. If the specific method is
+    /// <c>"GET"</c> or <c>"HEAD</c>," any provided body content is discarded.
     /// </summary>
     public async Task InvokeVoidAsync<T>(object? body) =>
         await InvokeAsync<T>(body);
