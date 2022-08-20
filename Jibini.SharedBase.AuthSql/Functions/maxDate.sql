@@ -1,0 +1,12 @@
+﻿CREATE FUNCTION [dbo].[maxDate]
+(
+	@a DATETIME = NULL,
+	@b DATETIME = NULL
+)
+RETURNS DATETIME
+AS
+BEGIN
+	RETURN CASE WHEN ISNULL(@a, @b) > ISNULL(@b, @a)
+		THEN ISNULL(@a, @b)
+		ELSE ISNULL(@b, @a) END;
+END

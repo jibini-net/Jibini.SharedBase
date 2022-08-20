@@ -5,7 +5,13 @@ VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.Components", "Jibini.SharedBase.Components\Jibini.SharedBase.Components.csproj", "{CAF9B341-5ACB-40AC-AD38-F2439A23953B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.Server", "Jibini.SharedBase.Server\Jibini.SharedBase.Server.csproj", "{FBE69195-2DF1-4F4C-8664-20F08EBFD21E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.LibServer", "Jibini.SharedBase.LibServer\Jibini.SharedBase.LibServer.csproj", "{FBE69195-2DF1-4F4C-8664-20F08EBFD21E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.LibUtil", "Jibini.SharedBase.LibUtil\Jibini.SharedBase.LibUtil.csproj", "{7278B873-29B4-4632-983D-DE25640CB9EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.Auth", "Jibini.SharedBase.Auth\Jibini.SharedBase.Auth.csproj", "{10203FFB-6AD9-4A57-8E97-128FA9099B22}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.LibAuth", "Jibini.SharedBase.LibAuth\Jibini.SharedBase.LibAuth.csproj", "{21C67021-940D-4D77-82F9-045B30917754}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,18 @@ Global
 		{FBE69195-2DF1-4F4C-8664-20F08EBFD21E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBE69195-2DF1-4F4C-8664-20F08EBFD21E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBE69195-2DF1-4F4C-8664-20F08EBFD21E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7278B873-29B4-4632-983D-DE25640CB9EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7278B873-29B4-4632-983D-DE25640CB9EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7278B873-29B4-4632-983D-DE25640CB9EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7278B873-29B4-4632-983D-DE25640CB9EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10203FFB-6AD9-4A57-8E97-128FA9099B22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10203FFB-6AD9-4A57-8E97-128FA9099B22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10203FFB-6AD9-4A57-8E97-128FA9099B22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10203FFB-6AD9-4A57-8E97-128FA9099B22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21C67021-940D-4D77-82F9-045B30917754}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21C67021-940D-4D77-82F9-045B30917754}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21C67021-940D-4D77-82F9-045B30917754}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21C67021-940D-4D77-82F9-045B30917754}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

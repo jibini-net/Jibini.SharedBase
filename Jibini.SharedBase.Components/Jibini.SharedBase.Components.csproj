@@ -12,7 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <Folder Include="Util\Extensions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Jibini.SharedBase.LibUtil\Jibini.SharedBase.LibUtil.csproj" />
   </ItemGroup>
 
 

@@ -1,0 +1,12 @@
+﻿CREATE FUNCTION [dbo].[maxNumeric]
+(
+	@a DECIMAL(18, 2) = NULL,
+	@b DECIMAL(18, 2) = NULL
+)
+RETURNS DECIMAL(18, 2)
+AS
+BEGIN
+	RETURN CASE WHEN ISNULL(@a, @b) > ISNULL(@b, @a)
+		THEN ISNULL(@a, @b)
+		ELSE ISNULL(@b, @a) END;
+END
