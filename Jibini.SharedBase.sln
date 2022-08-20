@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.Auth", "J
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.LibAuth", "Jibini.SharedBase.LibAuth\Jibini.SharedBase.LibAuth.csproj", "{21C67021-940D-4D77-82F9-045B30917754}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Jibini.SharedBase.AuthSql", "Jibini.SharedBase.AuthSql\Jibini.SharedBase.AuthSql.sqlproj", "{8D5EDB33-49CC-4100-82D3-1AF2AFA0212F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,12 @@ Global
 		{21C67021-940D-4D77-82F9-045B30917754}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21C67021-940D-4D77-82F9-045B30917754}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21C67021-940D-4D77-82F9-045B30917754}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D5EDB33-49CC-4100-82D3-1AF2AFA0212F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D5EDB33-49CC-4100-82D3-1AF2AFA0212F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D5EDB33-49CC-4100-82D3-1AF2AFA0212F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8D5EDB33-49CC-4100-82D3-1AF2AFA0212F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D5EDB33-49CC-4100-82D3-1AF2AFA0212F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D5EDB33-49CC-4100-82D3-1AF2AFA0212F}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

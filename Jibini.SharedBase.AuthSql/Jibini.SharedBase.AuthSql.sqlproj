@@ -13,8 +13,8 @@
     </RootPath>
     <RootNamespace>Jibini.SharedBase.AuthSql</RootNamespace>
     <AssemblyName>Jibini.SharedBase.AuthSql</AssemblyName>
-    <ModelCollation>1033, CI</ModelCollation>
-    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetLanguage>CS</TargetLanguage>
@@ -22,6 +22,8 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -56,5 +58,33 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="Tables\" />
+    <Folder Include="Functions\" />
+    <Folder Include="Stored Procedures\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\Identity.sql" />
+    <Build Include="Tables\IdentityAccount.sql" />
+    <Build Include="Tables\IdentityPermission.sql" />
+    <Build Include="Tables\IdentityRole.sql" />
+    <Build Include="Tables\IdentityToken.sql" />
+    <Build Include="Tables\Permission.sql" />
+    <Build Include="Tables\Role.sql" />
+    <Build Include="Tables\RolePermission.sql" />
+    <Build Include="Tables\Tenant.sql" />
+    <Build Include="Tables\Account.sql" />
+    <Build Include="Tables\Token.sql" />
+    <Build Include="Functions\maxDate.sql" />
+    <Build Include="Functions\maxNumeric.sql" />
+    <Build Include="Functions\minDate.sql" />
+    <Build Include="Functions\minNumeric.sql" />
+    <Build Include="Functions\nullableContains.sql" />
+    <Build Include="Functions\getAccounts.sql" />
+    <Build Include="Stored Procedures\Account_Search_Paginated.sql" />
+    <Build Include="Stored Procedures\Account_Get.sql" />
+    <Build Include="Stored Procedures\Account_Set.sql" />
+    <Build Include="Stored Procedures\Account_SetPassword.sql" />
+    <Build Include="Stored Procedures\Account_Delete.sql" />
+    <Build Include="Stored Procedures\Account_LogIn.sql" />
   </ItemGroup>
 </Project>
