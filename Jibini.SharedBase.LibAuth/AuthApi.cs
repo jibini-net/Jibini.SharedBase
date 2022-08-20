@@ -13,18 +13,24 @@ public class AuthApi
     /// </summary>
     public TenantPath Tenant { get; private set; }
 
+    /// <summary>
+    /// Actions for the "Account" API paths.
+    /// </summary>
+    public AccountPath Account { get; private set; }
+
     public AuthApi(string basePath)
     {
         Tenant = new(basePath);
+        Account = new(basePath);
     }
 }
 
 /// <summary>
 /// Actions for the "Tenant" API paths.
 /// </summary>
-public class TenantPath : IRetrievablePath<ITenant, ISearchTenant, int>,
-    IModifiablePath<ITenant>,
-    IDeletablePath<ITenant>
+public class TenantPath : IRetrievablePath<Tenant, SearchTenant, int>,
+    IModifiablePath<Tenant, ISetTenant>,
+    IDeletablePath<Tenant>
 {
     public string BasePath { get; private set; }
     public string EndpointUri { get; private set; }
@@ -33,5 +39,25 @@ public class TenantPath : IRetrievablePath<ITenant, ISearchTenant, int>,
     {
         BasePath = basePath;
         EndpointUri = basePath.JoinUri("Tenant");
+    }
+}
+
+/// <summary>
+/// Actions for the "Account" API paths.
+/// </summary>
+public class AccountPath : IRetrievablePath<Account, SearchAccount, int>,
+    IModifiablePath<Account, ISetAccount>,
+    IDeletablePath<Account>
+{
+    public string BasePath { get; private set; }
+    public string EndpointUri { get; private set; }
+
+    public ApiPath<ISetAccountPassword, Account> SetPassword =>
+        new(HttpMethod.Post, EndpointUri.JoinUri("SetPassword"));
+
+    public AccountPath(string basePath)
+    {
+        BasePath = basePath;
+        EndpointUri = basePath.JoinUri("Account");
     }
 }

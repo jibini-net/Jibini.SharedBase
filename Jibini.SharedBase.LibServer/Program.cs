@@ -8,9 +8,17 @@ builder.Services.AddSharedBaseServer();
 var app = builder.Build();
 app.SetupSharedBaseServer();
 
-await new AuthApi("https://auth.jibini.net")
-    .Tenant
+var api = new AuthApi("https://auth.jibini.net");
+
+var account = await api.Account
     .Get(1)
-    .InvokeAsync<Tenant>();
+    .InvokeAsync();
+await api.Account
+    .SetPassword
+    .InvokeAsync(account);
+
+await api.Tenant
+    .Get(1)
+    .InvokeAsync();
 
 app.Run();

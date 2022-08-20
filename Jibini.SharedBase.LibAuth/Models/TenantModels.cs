@@ -3,6 +3,17 @@
 /// <summary>
 /// Model for user groups who use the application simultaneously.
 /// </summary>
+public class Tenant : ITenant
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = "";
+    public DateTime Created { get; set; }
+    public DateTime Modified { get; set; }
+}
+
+/// <summary>
+/// Model for user groups who use the application simultaneously.
+/// </summary>
 public interface ITenant : ISetTenant
 {
     new int Id { get; set; }
@@ -21,21 +32,10 @@ public interface ISetTenant
 }
 
 /// <summary>
-/// Interface of fields which can be used to filter application tenants.
+/// Model for set of fields which can be used to filter application tenants.
 /// </summary>
-public interface ISearchTenant
-{
-    int Id { get; set; }
-    string Name { get; set; }
-}
-
-/// <summary>
-/// Model for user groups who use the application simultaneously.
-/// </summary>
-public class Tenant : ITenant
+public class SearchTenant
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
-    public DateTime Created { get; set; }
-    public DateTime Modified { get; set; }
 }
