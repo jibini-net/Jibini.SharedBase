@@ -1,0 +1,70 @@
+﻿@namespace Jibini.SharedBase.Components
+@typeparam T
+
+<CascadingValue Value="@this">
+
+    <InputSelect @bind-Value="@SelectedSerial" class="form-select form-select-sm">
+
+        @if (AllowBlank || Selected is null)
+        {
+            <option value="-1">@BlankMessage</option>
+        }
+
+        @ChildContent
+
+    </InputSelect>
+
+</CascadingValue>
+
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public bool AllowBlank { get; set; } = true;
+
+    [Parameter]
+    public string BlankMessage { get; set; } = "Select an option";
+
+    [Parameter]
+    public Func<T?, T?, bool> EqualsCheck { get; set; } = ((a, b) => a?.Equals(b) ?? (b is null));
+
+    private T? _Selected;
+    [Parameter]
+    public T? Selected
+    {
+        get => _Selected;
+        set
+        {
+            if (EqualsCheck(_Selected, value))
+                return;
+
+            _Selected = value;
+            SelectedChanged.InvokeAsync(Selected);
+        }
+    }
+    
+    public int SelectedSerial
+    {
+        get => Options.FindIndex((it) => EqualsCheck(it.Value, Selected));
+        set
+        {
+            Selected = value == -1
+                ? default
+                : Options[value].Value;
+        }
+    }
+
+    [Parameter]
+    public EventCallback<T> SelectedChanged { get; set; }
+
+    public List<ICustomOption<T>> Options { get; set; } = new();
+
+    public int RegisterOption(ICustomOption<T> option)
+    {
+        Options.Add(option);
+
+        return Options.Count - 1;
+    }
+}

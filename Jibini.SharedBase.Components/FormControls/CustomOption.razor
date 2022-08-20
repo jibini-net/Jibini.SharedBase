@@ -1,0 +1,26 @@
+﻿@namespace Jibini.SharedBase.Components
+@typeparam T
+@implements ICustomOption<T>
+
+<option value="@serial">@ChildContent?.Invoke(Value)</option>
+
+@code {
+    [CascadingParameter]
+    public CustomSelect<T>? RootSelect { get; set; }
+
+    [Parameter]
+    public RenderFragment<T?>? ChildContent { get; set; }
+
+    [Parameter]
+    public T? Value { get; set; }
+
+    private int serial;
+    public bool IsSelected => RootSelect!.SelectedSerial == serial;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        serial = RootSelect!.RegisterOption(this);
+    }
+}
