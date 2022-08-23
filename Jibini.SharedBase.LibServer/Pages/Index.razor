@@ -1,48 +1,12 @@
 ﻿@page "/"
 @namespace Jibini.SharedBase.Server.Pages
-@using Microsoft.AspNetCore.Html
-
-@inject AccountRepository accounts
-@inject GiftCardRepository cards
 
 <PageTitle>Index</PageTitle>
 
 <div class="container">
     
-    <EditForm Model="@formStub" Context="_">
-
-        <CustomSelect T="IAccount"
-            @bind-Selected="@account"
-            AllowBlank="@true"
-            EqualsCheck="(a, b) => a?.Id == b?.Id">
-        
-            @foreach (var a in allAccounts!)
-            {
-                <CustomOption Value="@a">@a.Name</CustomOption>
-            }
-
-        </CustomSelect>
-
-    </EditForm>
-    
-
-    <div class="d-block w-100 mt-4" style="word-break: break-all;">
-        @if (account is not null)
-        {
-            <code>@accounts.Set(account).ToJson()</code>
-        }
-    </div>
-
 </div>
 
 @code {
-    private readonly object formStub = new { };
-    private IAccount? account;
 
-    private List<IAccount>? allAccounts =>
-        new()
-        {
-            accounts.Get(1)!,
-            accounts.Get(5)!
-        };
 }

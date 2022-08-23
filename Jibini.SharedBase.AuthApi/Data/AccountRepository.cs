@@ -1,4 +1,5 @@
-﻿using Jibini.SharedBase.Util.Services;
+﻿using Jibini.SharedBase.Auth;
+using Jibini.SharedBase.Util.Services;
 
 namespace Jibini.SharedBase.Data;
 
@@ -33,8 +34,7 @@ public class AccountRepository
                 new()
                 {
                     Id = id
-                },
-                "AuthConnection")
+                })
             .Single()!;
 
     /// <summary>
@@ -55,8 +55,7 @@ public class AccountRepository
                 new()
                 {
                     Id = id
-                },
-                "AuthConnection")
+                })
             ?.SingleOrDefault();
 
     /// <summary>
@@ -68,8 +67,7 @@ public class AccountRepository
                 new()
                 {
                     Email = email
-                },
-                "AuthConnection")
+                })
             ?.SingleOrDefault();
 
     /// <summary>
@@ -88,8 +86,7 @@ public class AccountRepository
                 new()
                 {
                     Id = id
-                },
-                "AuthConnection")
+                })
             .Single()!;
 
     /// <summary>
@@ -98,8 +95,7 @@ public class AccountRepository
     /// </summary>
     public IAccount Set(ISetAccount account) =>
         database.CallProcForJson<ISetAccount, Account>("dbo.[Account_Set]",
-                account,
-                "AuthConnection")
+                account)
             .Single()!;
 
     /// <summary>
@@ -107,7 +103,6 @@ public class AccountRepository
     /// </summary>
     public IAccount SetPassword(ISetAccountPassword account) =>
         database.CallProcForJson<ISetAccountPassword, Account>("dbo.[Account_SetPassword]",
-                account,
-                "AuthConnection")
+                account)
             .Single()!;
 }

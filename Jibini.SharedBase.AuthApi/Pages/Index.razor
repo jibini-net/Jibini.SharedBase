@@ -1,2 +1,5 @@
 ﻿@page "/"
+@namespace Jibini.SharedBase.Auth.Pages
+@inject AccountRepository accounts
 
+@(new PasswordResetEmail(accounts.Get(1)!, "https://google.com").ToHtml())
