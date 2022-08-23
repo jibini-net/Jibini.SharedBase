@@ -1,7 +1,6 @@
 ﻿using Jibini.SharedBase.Util.Extensions;
-using Microsoft.Extensions.Configuration;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace Jibini.SharedBase.Util.Services;
 
@@ -31,7 +30,7 @@ public class DatabaseService
 
         using var proc = conn.CreateCommand();
         proc.CommandText = name;
-        proc.CommandType = System.Data.CommandType.StoredProcedure;
+        proc.CommandType = CommandType.StoredProcedure;
         proc.Parameters.AddArgs(args);
 
         proc.ExecuteNonQuery();

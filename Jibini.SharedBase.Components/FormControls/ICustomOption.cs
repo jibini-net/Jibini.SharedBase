@@ -2,5 +2,5 @@
 
 public interface ICustomOption<T>
 {
-    public T? Value { get; }
+    T? Value { get; }
 }

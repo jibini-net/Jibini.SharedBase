@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,11 +8,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Jibini.SharedBase.Components\Jibini.SharedBase.Components.csproj" />
+    <ProjectReference Include="..\Jibini.SharedBase.LibAuth\Jibini.SharedBase.LibAuth.csproj" />
     <ProjectReference Include="..\Jibini.SharedBase.LibUtil\Jibini.SharedBase.LibUtil.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <PackageReference Include="MailKit" Version="3.3.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.0" />
+    <PackageReference Include="Winnovative.HtmlToPdf.NetCore.x64" Version="15.0.0" />
   </ItemGroup>
 
 </Project>

@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "Jibini.SharedBase.Server": {
+    "Jibini.SharedBase.LibServer": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

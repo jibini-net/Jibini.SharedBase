@@ -12,10 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Util\Extensions\" />
+    <PackageReference Include="BlazorTemplater" Version="1.5.0" />
+    <PackageReference Include="OxyPlot.Core" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Jibini.SharedBase.LibAuth\Jibini.SharedBase.LibAuth.csproj" />
     <ProjectReference Include="..\Jibini.SharedBase.LibUtil\Jibini.SharedBase.LibUtil.csproj" />
   </ItemGroup>
 

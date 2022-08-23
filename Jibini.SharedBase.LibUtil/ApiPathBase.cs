@@ -1,4 +1,5 @@
 ﻿using Jibini.SharedBase.Util.Extensions;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text.RegularExpressions;
 
@@ -9,11 +10,13 @@ namespace Jibini.SharedBase.Util;
 /// </summary>
 public interface IRetrievablePath<T, TSearch, TKey>
 {
-    public string EndpointUri { get; }
+    string EndpointUri { get; }
 
-    public ApiPath Get => new(HttpMethod.Get, Path.Combine(EndpointUri, "{}"));
+    ApiPath<object, T> Get =>
+        new(HttpMethod.Get, EndpointUri.JoinUri("{}"));
 
-    public ApiPath Search => new(HttpMethod.Get, Path.Combine(EndpointUri, "Search"));
+    ApiPath<TSearch, List<T>> Search =>
+        new(HttpMethod.Get, EndpointUri.JoinUri("Search"));
 }
 
 /// <summary>
@@ -21,23 +24,25 @@ public interface IRetrievablePath<T, TSearch, TKey>
 /// </summary>
 public static class RetrievablePathExtensions
 {
-    public static ApiPath Get<T, TSearch, TKey>(this IRetrievablePath<T, TSearch, TKey> it, TKey id) =>
-        it.Get.FillIn(id?.ToString() ?? "");
+    public static ApiPath<object, T> Get<T, TSearch, TKey>(this IRetrievablePath<T, TSearch, TKey> it, TKey id) =>
+        it.Get.FillIn(id);
 
-    public static ApiPath Search<T, TSearch, TKey>(this IRetrievablePath<T, TSearch, TKey> it, TSearch args) =>
+    public static ApiPath<TSearch, List<T>> Search<T, TSearch, TKey>(this IRetrievablePath<T, TSearch, TKey> it, TSearch args) =>
         it.Search.AddArgs(args);
 }
 
 /// <summary>
 /// Set of operations which can be performed to modify entities.
 /// </summary>
-public interface IModifiablePath<T>
+public interface IModifiablePath<T, TSet>
 {
-    public string EndpointUri { get; }
+    string EndpointUri { get; }
 
-    public ApiPath Set => new(HttpMethod.Post, EndpointUri);
-
-    public ApiPath Patch => new(HttpMethod.Patch, Path.Combine(EndpointUri, "{}"));
+    ApiPath<TSet, T> Set =>
+        new(HttpMethod.Post, EndpointUri);
+    
+    ApiPath<JsonPatchDocument, T> Patch =>
+        new(HttpMethod.Patch, EndpointUri.JoinUri("{}"));
 }
 
 /// <summary>
@@ -45,10 +50,10 @@ public interface IModifiablePath<T>
 /// </summary>
 public static class ModifiablePathExtensions
 {
-    public static ApiPath Set<T>(this IModifiablePath<T> it) =>
+    public static ApiPath<TSet, T> Set<T, TSet>(this IModifiablePath<T, TSet> it) =>
         it.Set;
 
-    public static ApiPath Patch<T>(this IModifiablePath<T> it, object id) =>
+    public static ApiPath<JsonPatchDocument, T> Patch<T, TSet>(this IModifiablePath<T, TSet> it, object id) =>
         it.Patch.FillIn(id);
 }
 
@@ -57,8 +62,10 @@ public static class ModifiablePathExtensions
 /// </summary>
 public interface IDeletablePath<T>
 {
-    public string EndpointUri { get; }
-    public ApiPath Delete => new(HttpMethod.Delete, Path.Combine(EndpointUri, "{}"));
+    string EndpointUri { get; }
+
+    ApiPath<object, T> Delete =>
+        new(HttpMethod.Delete, EndpointUri.JoinUri("{}"));
 }
 
 /// <summary>
@@ -66,15 +73,15 @@ public interface IDeletablePath<T>
 /// </summary>
 public static class DeletablePathExtensions
 {
-    public static ApiPath Delete<T>(this IDeletablePath<T> it, object id) =>
-        it.Delete.FillIn(id.ToString() ?? "");
+    public static ApiPath<object, T> Delete<T>(this IDeletablePath<T> it, object id) =>
+        it.Delete.FillIn(id);
 }
 
 /// <summary>
 /// A named path in the API which can be invoked. Each instance of a path has
 /// one valid HTTP method and includes a fully qualified endpoint path.
 /// </summary>
-public class ApiPath
+public class ApiPath<TArgs, TResult>
 {
     /// <summary>
     /// Which HTTP method is used to invoke this endpoint path.
@@ -83,7 +90,7 @@ public class ApiPath
 
     /// <summary>
     /// The fully qualified path of the API endpoint, with any empty path
-    /// parameters replaced with a placeholder ("{}").
+    /// parameters replaced with a placeholder ("<c>{}</c>").
     /// </summary>
     public string Path { get; private set; }
 
@@ -94,38 +101,34 @@ public class ApiPath
     }
 
     /// <summary>
-    /// Replaces the first empty placeholder ("{}") in the path with a real
-    /// parameter value.
+    /// Replaces the first empty placeholder ("<c>{}</c>") in the path with a
+    /// real parameter value.
     /// </summary>
-    public ApiPath FillIn(object? value)
-    {
-        var regex = new Regex(Regex.Escape("{}"));
-        var newPath = regex.Replace(Path, value?.ToString() ?? "", 1);
-
-        return new(Method, newPath);
-    }
+    public ApiPath<TArgs, TResult> FillIn(object? value) =>
+        new(Method, Path.ReplaceFirst("{}", value?.ToString() ?? ""));
 
     /// <summary>
     /// Appends a parameter string to a path based on a provided model. Specify
     /// an interface type parameter to limit which fields are included.
     /// </summary>
-    public ApiPath AddArgs<TArgs>(TArgs? args)
+    public ApiPath<TArgs, TResult> AddArgs(TArgs? args)
     {
         if (args is null)
             return this;
 
         var values = new Dictionary<string, object?>();
-        var fields = typeof(TArgs).GetFields()
+        var fields = typeof(TArgs)
+            .GetFields()
             .ToDictionary((it) => it.Name, (it) => it.GetValue(args)?.ToString());
 
         return new(Method, QueryHelpers.AddQueryString(Path, fields));
     }
 
     /// <summary>
-    /// Calls the API action via the correct method. If the method is "GET" or
-    /// "HEAD," any provided body content is discarded.
+    /// Calls the API action via the correct method. If the specific method is
+    /// <c>"GET"</c> or <c>"HEAD</c>," any provided body content is discarded.
     /// </summary>
-    public async Task<T?> InvokeAsync<T>(object? body = null)
+    public async Task<TResult?> InvokeAsync(TArgs? body = default)
     {
         using var client = new HttpClient();
         var result = await client.SendAsync(
@@ -136,16 +139,16 @@ public class ApiPath
                     : new StringContent(body.ToJson() ?? "")
             });
 
-        result.EnsureSuccessStatusCode();
         var json = await result.Content.ReadAsStringAsync();
+        result.EnsureSuccessStatusCode();
 
-        return json.ParseTo<T>();
+        return json.ParseTo<TResult>();
     }
 
     /// <summary>
-    /// Calls the API action via the correct method. If the method is "GET" or
-    /// "HEAD," any provided body content is discarded.
+    /// Calls the API action via the correct method. If the specific method is
+    /// <c>"GET"</c> or <c>"HEAD</c>," any provided body content is discarded.
     /// </summary>
-    public async Task InvokeVoidAsync<T>(object? body) =>
-        await InvokeAsync<T>(body);
+    public async Task InvokeVoidAsync(TArgs? body = default) =>
+        await InvokeAsync(body);
 }

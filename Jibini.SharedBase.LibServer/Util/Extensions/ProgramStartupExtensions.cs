@@ -1,5 +1,4 @@
-﻿using Jibini.SharedBase.Data;
-using Jibini.SharedBase.Util.Services;
+﻿using Jibini.SharedBase.Util.Services;
 
 namespace Jibini.SharedBase.Util.Extensions;
 
@@ -20,8 +19,6 @@ public static class ProgramStartupExtensions
         services.AddControllersWithViews();
 
         services.AddSingleton<DatabaseService>();
-        services.AddScoped<AccountRepository>();
-        services.AddScoped<GiftCardRepository>();
     }
 
     /// <summary>
