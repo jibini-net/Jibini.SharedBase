@@ -6,7 +6,9 @@ namespace Jibini.SharedBase.Util.Extensions;
 
 /// <summary>
 /// Any class or component implementing this interface can be rendered to HTML
-/// through the component renderer.
+/// through the component renderer. Allows limiting rendering to components
+/// which take into account the possibility of being cloned, or are intended to
+/// be used out of context as templated content.
 /// </summary>
 public interface IRenderable<TSelf>
 { }
@@ -15,7 +17,7 @@ public static class ComponentRenderingExtensions
 {
     /// <summary>
     /// Creates a duplicate component to render it to HTML, returning the outer
-    /// HTML content.
+    /// HTML content. Components do not need to implement the method.
     /// </summary>
     public static string? ToHtml<T>(this IRenderable<T> it)
         where T : IComponent

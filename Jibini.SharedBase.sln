@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.LibServer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.LibUtil", "Jibini.SharedBase.LibUtil\Jibini.SharedBase.LibUtil.csproj", "{7278B873-29B4-4632-983D-DE25640CB9EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.Auth", "Jibini.SharedBase.Auth\Jibini.SharedBase.Auth.csproj", "{10203FFB-6AD9-4A57-8E97-128FA9099B22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.AuthApi", "Jibini.SharedBase.AuthApi\Jibini.SharedBase.AuthApi.csproj", "{10203FFB-6AD9-4A57-8E97-128FA9099B22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jibini.SharedBase.LibAuth", "Jibini.SharedBase.LibAuth\Jibini.SharedBase.LibAuth.csproj", "{21C67021-940D-4D77-82F9-045B30917754}"
 EndProject
