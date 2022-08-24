@@ -2,4 +2,29 @@
 @namespace Jibini.SharedBase.Auth.Pages
 @inject AccountRepository accounts
 
-@(new PasswordResetEmail(accounts.Get(1)!, "https://google.com").ToHtml())
+<EditForm Model="@stub">
+
+    <InputCheckbox @bind-Value="@showHtml" class="mb-4 me-1" />
+    <label>Show HTML</label>
+
+    @if (showHtml)
+    {
+        <code>
+            <pre>
+                @html.Value
+            </pre>
+        </code>
+    } else
+    {
+        @((MarkupString)html.Value)
+    }
+
+</EditForm>
+
+@code {
+    private object stub = new { };
+
+    private bool showHtml = false;
+    private Lazy<string> html => new(() =>
+        new PasswordResetEmail(accounts.Get(1)!, "https://google.com").ToHtml());
+}
