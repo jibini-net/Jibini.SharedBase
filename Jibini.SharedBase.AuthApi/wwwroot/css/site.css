@@ -1,7 +1,15 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+:root {
+    --hx-sidebar-item-color: white !important;
+    --hx-sidebar-brand-name-color: white !important;
+    --hx-sidebar-background-color: #2d2b42 !important;
+    --layout-background: #dadee3;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    min-height: 100%;
 }
 
 h1:focus {

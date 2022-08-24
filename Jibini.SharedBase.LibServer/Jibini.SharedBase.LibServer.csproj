@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Shared\MainLayout.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Shared\MainLayout.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Jibini.SharedBase.Components\Jibini.SharedBase.Components.csproj" />
     <ProjectReference Include="..\Jibini.SharedBase.LibAuth\Jibini.SharedBase.LibAuth.csproj" />
     <ProjectReference Include="..\Jibini.SharedBase.LibUtil\Jibini.SharedBase.LibUtil.csproj" />

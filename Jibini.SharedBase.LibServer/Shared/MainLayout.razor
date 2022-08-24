@@ -3,18 +3,15 @@
 
 <PageTitle>Jibini.SharedBase.Server</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<HxMessenger Position="ToastContainerPosition.TopEnd" />
+<HxMessageBoxHost />
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+<div class="d-flex flex-row" id="layout-container">
+    <NavMenu />
 
-        <article class="content px-4">
+    <div id="content-backdrop" class="w-100">
+        <div class="container p-4">
             @Body
-        </article>
-    </main>
+        </div>
+    </div>
 </div>

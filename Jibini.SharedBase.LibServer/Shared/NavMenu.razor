@@ -1,21 +1,33 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Jibini.SharedBase.Server</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿<HxSidebar MultipleItemsExpansion="false"
+    ResponsiveBreakpoint="@SidebarResponsiveBreakpoint.None"
+    Id="layout-sidebar"
+    CssClass="shadow">
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-    </nav>
-</div>
+    <HeaderTemplate>
+        <HxSidebarBrand BrandName="Brand name"
+            BrandNameShort="BN" />
+    </HeaderTemplate>
+
+    <ItemsTemplate>
+        <HxSidebarItem Text="A" Icon="@BootstrapIcon.Person" Href="" Match="NavLinkMatch.All">
+            <HxSidebarItem Text="1" Href="A1" />
+            <HxSidebarItem Text="2" Href="A2" />
+        </HxSidebarItem>
+
+        <HxSidebarItem Text="B" Icon="@BootstrapIcon.Person">
+            <HxSidebarItem Text="1" Href="B1" />
+            <HxSidebarItem Text="2" Href="B2" />
+        </HxSidebarItem>
+
+        <HxSidebarItem Text="C" Icon="BootstrapIcon.Clock">
+            <HxSidebarItem Text="1" Icon="BootstrapIcon.Person" Href="C1" />
+            <HxSidebarItem Text="2" Icon="BootstrapIcon.Clock" Href="C2" />
+        </HxSidebarItem>
+
+        <HxSidebarItem Text="D" Href="D" Icon="BootstrapIcon.Wallet2" />
+    </ItemsTemplate>
+
+</HxSidebar>
 
 @code {
     private bool collapseNavMenu = true;
