@@ -23,6 +23,7 @@ public static class ProgramStartupExtensions
         services.AddHxMessageBoxHost();
 
         services.AddSingleton<DatabaseService>();
+        services.AddSingleton<ChromiumPdfService>();
     }
 
     /// <summary>
