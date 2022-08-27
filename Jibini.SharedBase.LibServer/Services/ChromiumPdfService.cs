@@ -4,7 +4,7 @@ namespace Jibini.SharedBase.Util.Services;
 
 public class ChromiumPdfService
 {
-    public async Task<Stream> RenderPdf(string html, bool isLandscape = false, int additionalDelay = 0)
+    public async Task<Stream> RenderPdfAsync(string html, bool isLandscape = false, int additionalDelay = 0)
     {
         using var browserFetcher = new BrowserFetcher();
         await browserFetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
@@ -23,15 +23,15 @@ public class ChromiumPdfService
             Landscape = isLandscape,
             MarginOptions = new()
             {
-                Top = "0.5in",
-                Bottom = "0.5in",
-                Left = "0.5in",
-                Right = "0.5in"
+                Top = "0.35in",
+                Bottom = "0.35in",
+                Left = "0.35in",
+                Right = "0.35in"
             }
         });
     }
 
-    public async Task<Stream> RenderPdf(Uri uri, bool isLandscape = false, int additionalDelay = 0)
+    public async Task<Stream> RenderPdfAsync(Uri uri, bool isLandscape = false, int additionalDelay = 0)
     {
         using var browserFetcher = new BrowserFetcher();
         await browserFetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
@@ -50,10 +50,10 @@ public class ChromiumPdfService
             Landscape = isLandscape,
             MarginOptions = new()
             {
-                Top = "0.5in",
-                Bottom = "0.5in",
-                Left = "0.5in",
-                Right = "0.5in"
+                Top = "0.35in",
+                Bottom = "0.35in",
+                Left = "0.35in",
+                Right = "0.35in"
             }
         });
     }
