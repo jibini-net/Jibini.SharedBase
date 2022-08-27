@@ -1,4 +1,11 @@
-﻿#layout-container
+﻿* {
+    --hx-sidebar-item-color: white !important;
+    --hx-sidebar-brand-name-color: white !important;
+    --hx-sidebar-background-color: #2d2b42 !important;
+    --layout-background: #dadee3;
+}
+
+#layout-container
 {
     min-height: 100vh;
 }

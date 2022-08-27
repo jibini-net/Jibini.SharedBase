@@ -8,21 +8,20 @@
 
 <div class="container">
 
-    <HxButton OnClick="@OnPdfClick" Icon="@BootstrapIcon.Download">PDF</HxButton>
+    <HxButton OnClick="@OnHtmlClick" Icon="@BootstrapIcon.Download">HTML</HxButton>
 
-    <HxButton OnClick="@OnSelfClick" Icon="@BootstrapIcon.Download">Self</HxButton>
+    <HxButton OnClick="@OnUriClick" Icon="@BootstrapIcon.Download">URI</HxButton>
 
 </div>
 
 @code {
-    private async Task OnPdfClick()
+    private async Task OnHtmlClick()
     {
         toast.AddInformation("Rendering PDF");
 
         try
         {
-            var pdf = await chrome.RenderPdf("<h1>Test</h1><button>Stuff</button>");
-
+            using var pdf = await chrome.RenderPdf("<h1>Test</h1><button>Stuff</button>");
             using var output = new FileStream("test.pdf", FileMode.Create);
             await pdf.CopyToAsync(output);
 
@@ -33,15 +32,15 @@
         }
     }
     
-    private async Task OnSelfClick()
+    private async Task OnUriClick()
     {
         toast.AddInformation("Rendering PDF");
 
         try
         {
             var self = nav.BaseUri.JoinUri("templates/test-pdf");
-            var pdf = await chrome.RenderPdf(new Uri(self));
 
+            using var pdf = await chrome.RenderPdf(new Uri(self), additionalDelay: 500);
             using var output = new FileStream("test.pdf", FileMode.Create);
             await pdf.CopyToAsync(output);
 

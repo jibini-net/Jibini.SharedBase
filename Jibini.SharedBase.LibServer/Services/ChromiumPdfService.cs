@@ -9,18 +9,25 @@ public class ChromiumPdfService
         using var browserFetcher = new BrowserFetcher();
         await browserFetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
 
-        var browser = await Puppeteer.LaunchAsync(new()
+        using var browser = await Puppeteer.LaunchAsync(new()
         {
             Headless = true
         });
 
-        var page = await browser.NewPageAsync();
+        using var page = await browser.NewPageAsync();
         await page.SetContentAsync(html);
         await Task.Delay(additionalDelay);
 
         return await page.PdfStreamAsync(new()
         {
-            Landscape = isLandscape
+            Landscape = isLandscape,
+            MarginOptions = new()
+            {
+                Top = "0.5in",
+                Bottom = "0.5in",
+                Left = "0.5in",
+                Right = "0.5in"
+            }
         });
     }
 
@@ -29,18 +36,25 @@ public class ChromiumPdfService
         using var browserFetcher = new BrowserFetcher();
         await browserFetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
 
-        var browser = await Puppeteer.LaunchAsync(new()
+        using var browser = await Puppeteer.LaunchAsync(new()
         {
             Headless = true
         });
 
-        var page = await browser.NewPageAsync();
+        using var page = await browser.NewPageAsync();
         await page.GoToAsync(uri.ToString());
         await Task.Delay(additionalDelay);
 
         return await page.PdfStreamAsync(new()
         {
-            Landscape = isLandscape
+            Landscape = isLandscape,
+            MarginOptions = new()
+            {
+                Top = "0.5in",
+                Bottom = "0.5in",
+                Left = "0.5in",
+                Right = "0.5in"
+            }
         });
     }
 }

@@ -1,47 +1,5 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-:root {
-    --hx-sidebar-item-color: white !important;
-    --hx-sidebar-brand-name-color: white !important;
-    --hx-sidebar-background-color: #2d2b42 !important;
-    --layout-background: #dadee3;
-}
-
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    min-height: 100%;
-}
-
-h1:focus {
-    outline: none;
-}
-
-a, .btn-link {
-    color: #0071c1;
-}
-
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
-
-.content {
-    padding-top: 1.1rem;
-}
-
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
-}
-
-.invalid {
-    outline: 1px solid red;
-}
-
-.validation-message {
-    color: red;
-}
-
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
@@ -70,3 +28,23 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+h1:focus {
+    outline: none;
+}
+
+a, .btn-link {
+    color: #0071c1;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
