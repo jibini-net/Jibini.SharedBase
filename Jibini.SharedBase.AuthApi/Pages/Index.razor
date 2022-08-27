@@ -1,5 +1,55 @@
 ﻿@page "/"
 @namespace Jibini.SharedBase.Auth.Pages
 @inject AccountRepository accounts
+@inject IHxMessengerService toasts
+@inject IHxMessageBoxService messages
 
-@(new PasswordResetEmail(accounts.Get(1)!, "https://google.com").ToHtml())
+<EditForm Model="@stub">
+
+    <HxInputCheckbox @bind-Value="@showHtml"
+        Label="Show HTML" />
+
+    @if (showHtml)
+    {
+        <code>
+            <pre>
+                @html
+            </pre>
+        </code>
+    } else
+    {
+        @((MarkupString)html)
+    }
+
+    <HxInputDate @bind-Value="@dateValue"
+        Label="Date"
+        CssClass="my-4" />
+
+    <HxButton Color="@ThemeColor.Primary"
+        Text="Hello, world!"
+        OnClick="@OnClick" />
+
+</EditForm>
+
+@code {
+    private object stub = new { };
+
+    private string _html => new PasswordResetEmail(accounts.Get(1)!, "https://google.com").ToHtml();
+    private string html = "";
+    private bool showHtml = false;
+
+    private DateTime dateValue = DateTime.Now;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        html = _html;
+    }
+
+    private async Task OnClick()
+    {
+        await messages.ShowAsync("Test", "Hello, world!");
+        toasts.AddInformation("Hello, world!");
+    }
+}

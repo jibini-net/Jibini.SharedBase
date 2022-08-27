@@ -1,4 +1,5 @@
-﻿using Jibini.SharedBase.Util.Services;
+﻿using Havit.Blazor.Components.Web;
+using Jibini.SharedBase.Util.Services;
 
 namespace Jibini.SharedBase.Util.Extensions;
 
@@ -17,8 +18,12 @@ public static class ProgramStartupExtensions
         services.AddServerSideBlazor();
         services.AddControllers();
         services.AddControllersWithViews();
+        services.AddHxServices();
+        services.AddHxMessenger();
+        services.AddHxMessageBoxHost();
 
         services.AddSingleton<DatabaseService>();
+        services.AddSingleton<ChromiumPdfService>();
     }
 
     /// <summary>
