@@ -24,6 +24,7 @@ public static class ProgramStartupExtensions
 
         services.AddSingleton<DatabaseService>();
         services.AddSingleton<ChromiumPdfService>();
+        services.AddScoped<DownloadService>();
     }
 
     /// <summary>
@@ -40,6 +41,7 @@ public static class ProgramStartupExtensions
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
+        app.MapControllers();
         app.MapBlazorHub();
         app.MapFallbackToPage("/_Host");
         app.MapRazorPages();
