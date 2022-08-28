@@ -3,6 +3,10 @@ using Winnovative;
 
 namespace Jibini.SharedBase.Util.Services;
 
+/// <summary>
+/// A PDF rendering service with fewer moving parts, using Winnovative's PDF
+/// libraries to render HTML with moderate script support to a document.
+/// </summary>
 public class WinnovativePdfService
 {
     private readonly NavigationManager nav;
@@ -14,6 +18,9 @@ public class WinnovativePdfService
         this.config = config;
     }
 
+    /// <summary>
+    /// Renders the provided static HTML or static HTML with script to PDF.
+    /// </summary>
     public async Task<Stream> RenderPdfAsync(string html, bool isLandscape = false, int additionalDelay = 0) =>
         await Task.Run(() =>
         {
@@ -40,6 +47,9 @@ public class WinnovativePdfService
             return result;
         });
 
+    /// <summary>
+    /// Renders the content at the provided location as the contents of a PDF.
+    /// </summary>
     public async Task<Stream> RenderPdfAsync(Uri uri, bool isLandscape = false, int additionalDelay = 0) =>
         await Task.Run(() =>
         {

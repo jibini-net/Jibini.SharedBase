@@ -9,17 +9,36 @@
 
 <PageTitle>Test PDF Template</PageTitle>
 
-<style>
-</style>
+@{
+    using var http = new System.Net.Http.HttpClient();
+    var titles = new Task<string>[5];
+    var messages = new Task<string>[5];
+
+    for (int i = 0; i < messages.Length; i++)
+    {
+        titles[i] = http.GetStringAsync("https://hipsum.co/api/?type=hipster-centric&sentences=1");
+        messages[i] = http.GetStringAsync("https://hipsum.co/api/?type=hipster-centric&sentences=2");
+    }
+}
 
 @for (int i = 0; i < NUM_CHARTS; i++)
 {
     var copy = i;
     
-    <div class="row mb-3" style="page-break-inside: avoid;">
+    <div class="row mb-5" style="page-break-inside: avoid;">
         @if (i % 2 == 1)
         {
-            <div class="col-4"></div>
+            <div class="col-4">
+
+                @{
+                    var t = titles[i % messages.Length].Result.ParseTo<List<string>>()!;
+                    var m = messages[i % messages.Length].Result.ParseTo<List<string>>()!;
+                }
+
+                <p><strong>@(t[0])</strong></p>
+                <p>@(m[0])</p>
+
+            </div>
         }
 
         <div class="col-8">
@@ -30,6 +49,21 @@
             </div>
 
         </div>
+
+        @if (i % 2 == 0)
+        {
+            <div class="col-4">
+
+                @{
+                    var t = titles[i % messages.Length].Result.ParseTo<List<string>>()!;
+                    var m = messages[i % messages.Length].Result.ParseTo<List<string>>()!;
+                }
+
+                <p><strong>@(t[0])</strong></p>
+                <p>@(m[0])</p>
+
+            </div>
+        }
     </div>
 }
 

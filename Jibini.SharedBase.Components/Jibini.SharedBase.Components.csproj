@@ -1,5 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
-
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -21,7 +20,4 @@
     <ProjectReference Include="..\Jibini.SharedBase.LibAuth\Jibini.SharedBase.LibAuth.csproj" />
     <ProjectReference Include="..\Jibini.SharedBase.LibUtil\Jibini.SharedBase.LibUtil.csproj" />
   </ItemGroup>
-
-
-
 </Project>

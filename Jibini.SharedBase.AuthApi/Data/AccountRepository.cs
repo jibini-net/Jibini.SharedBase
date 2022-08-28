@@ -29,7 +29,7 @@ public class AccountRepository
     /// Deletes the specified record from the database, throwing an error if it
     /// is not found.
     /// </summary>
-    public IAccount Delete(int id) =>
+    public Account Delete(int id) =>
         database.CallProcForJson<Account_Delete_Args, Account>("dbo.[Account_Delete]",
                 new()
                 {
@@ -50,7 +50,7 @@ public class AccountRepository
     /// Gets the single record associated with the provided ID, or nothing if it
     /// doesn't exist.
     /// </summary>
-    public IAccount? Get(int id) =>
+    public Account? Get(int id) =>
         database.CallProcForJson<Account_Get_Args, Account>("dbo.[Account_Get]",
                 new()
                 {
@@ -62,7 +62,7 @@ public class AccountRepository
     /// Gets the single record associated with the provided ID, or nothing if it
     /// doesn't exist.
     /// </summary>
-    public IAccount? Get(string email) =>
+    public Account? Get(string email) =>
         database.CallProcForJson<Account_Get_Args, Account>("dbo.[Account_Get]",
                 new()
                 {
@@ -81,7 +81,7 @@ public class AccountRepository
     /// <summary>
     /// Reports to the database that the specified user is logged in.
     /// </summary>
-    public IAccount LogIn(int id) =>
+    public Account LogIn(int id) =>
         database.CallProcForJson<Account_Delete_Args, Account>("dbo.[Account_LogIn]",
                 new()
                 {
@@ -93,7 +93,7 @@ public class AccountRepository
     /// Modifies the values in the database if the specified record already
     /// exists, or creates a new record otherwise.
     /// </summary>
-    public IAccount Set(ISetAccount account) =>
+    public Account Set(ISetAccount account) =>
         database.CallProcForJson<ISetAccount, Account>("dbo.[Account_Set]",
                 account)
             .Single()!;
@@ -101,7 +101,7 @@ public class AccountRepository
     /// <summary>
     /// Saves only the password fields from an account detail object.
     /// </summary>
-    public IAccount SetPassword(ISetAccountPassword account) =>
+    public Account SetPassword(ISetAccountPassword account) =>
         database.CallProcForJson<ISetAccountPassword, Account>("dbo.[Account_SetPassword]",
                 account)
             .Single()!;

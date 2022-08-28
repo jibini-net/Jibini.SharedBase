@@ -2,6 +2,7 @@
     --hx-sidebar-item-color: white !important;
     --hx-sidebar-brand-name-color: white !important;
     --hx-sidebar-background-color: #2d2b42 !important;
+    --hx-form-spacing: 0.5rem !important;
     --layout-background: #dadee3;
 }
 
@@ -10,7 +11,7 @@
     min-height: 100vh;
 }
 
-    #layout-container .hx-sidebar::deep *
+    ::deep #layout-container .hx-sidebar *
     {
         color: white !important;
     }
@@ -20,4 +21,8 @@
 
     height: 100vh;
     overflow-y: scroll;
+}
+
+::deep .form-label {
+    margin-bottom: 0 !important;
 }

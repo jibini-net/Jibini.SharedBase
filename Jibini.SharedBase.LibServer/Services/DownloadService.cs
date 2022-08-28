@@ -22,7 +22,8 @@ public class DownloadService
     public async Task DownloadAsync(Stream data, string fileName)
     {
         var key = await DownloadController.RegisterDownloadAsync(data, fileName);
-        await js.InvokeVoidAsync("open", $"download/{key}", "_blank");
+        //await js.InvokeVoidAsync("open", , "download-portal");
+        await js.InvokeVoidAsync("IframeDownloadInterop.triggerDownload", $"download/{key}");
     }
 
     /// <summary>

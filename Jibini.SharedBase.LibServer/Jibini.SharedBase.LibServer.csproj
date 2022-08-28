@@ -29,4 +29,8 @@
     <PackageReference Include="Winnovative.HtmlToPdf.NetCore.x64" Version="15.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+
 </Project>

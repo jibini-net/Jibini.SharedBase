@@ -20,6 +20,22 @@
             <HxCard CssClass="p-3 mb-3">
                 <HxCardSubtitle CssClass="mb-3">Chromium</HxCardSubtitle>
 
+                <label class="mb-2">ChartJs.Blazor</label>
+                <div class="d-inline-block mb-3">
+                    <HxButton OnClick="@OnHtmlClickChrome"
+                        Icon="@BootstrapIcon.Download"
+                        Color="@ThemeColor.Primary">
+                        HTML
+                    </HxButton>
+
+                    <HxButton OnClick="@OnUriClickChrome"
+                        Icon="@BootstrapIcon.Download"
+                        Color="@ThemeColor.Secondary">
+                        URI
+                    </HxButton>
+                </div>
+
+                <label class="mb-2">OxyPlot (SVG)</label>
                 <div class="d-inline-block">
                     <HxButton OnClick="@OnHtmlClickChrome"
                         Icon="@BootstrapIcon.Download"
@@ -40,7 +56,23 @@
             
             <HxCard CssClass="p-3 mb-3">
                 <HxCardSubtitle CssClass="mb-3">Winnovative</HxCardSubtitle>
-                
+
+                <label class="mb-2">ChartJs.Blazor</label>
+                <div class="d-inline-block mb-3">
+                    <HxButton OnClick="@OnHtmlClickWinn"
+                        Icon="@BootstrapIcon.Download"
+                        Color="@ThemeColor.Primary">
+                        HTML
+                    </HxButton>
+
+                    <HxButton OnClick="@OnUriClickWinn"
+                        Icon="@BootstrapIcon.Download"
+                        Color="@ThemeColor.Secondary">
+                        URI
+                    </HxButton>
+                </div>
+
+                <label class="mb-2">OxyPlot (SVG)</label>
                 <div class="d-inline-block">
                     <HxButton OnClick="@OnHtmlClickWinn"
                         Icon="@BootstrapIcon.Download"
@@ -87,7 +119,7 @@
         {
             var self = nav.BaseUri.JoinUri("templates/test-pdf");
 
-            using var pdf = await chrome.RenderPdfAsync(new Uri(self), additionalDelay: 500);
+            using var pdf = await chrome.RenderPdfAsync(new Uri(self), additionalDelay: 2000);
             toast.AddInformation("Successfuly created PDF");
 
             await download.DownloadAsync(pdf, $"UriPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
@@ -118,7 +150,7 @@
         {
             var self = nav.BaseUri.JoinUri("templates/test-pdf");
 
-            using var pdf = await winn.RenderPdfAsync(new Uri(self), additionalDelay: 500);
+            using var pdf = await winn.RenderPdfAsync(new Uri(self), additionalDelay: 2000);
             toast.AddWarning("This configuration is known to not work correctly");
 
             await download.DownloadAsync(pdf, $"UriPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
