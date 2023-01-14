@@ -9,7 +9,7 @@ public class Account : IAccount
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
-    [MaxLength(50, ErrorMessage = "First cannot exceed 50 characters.")]
+    [MaxLength(50, ErrorMessage = "First name cannot exceed 50 characters.")]
     [Required(ErrorMessage = "First name is required.")]
     public string FirstName { get; set; } = "";
     [MaxLength(50, ErrorMessage = "Last name cannot exceed 50 characters.")]

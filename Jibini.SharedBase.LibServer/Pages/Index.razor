@@ -1,7 +1,7 @@
 ﻿@page "/"
 @namespace Jibini.SharedBase.Server.Pages
 @inject NavigationManager nav
-@inject IHxMessengerService toast
+@inject IHxMessengerService toasts
 @inject DownloadService download
 @inject ChromiumPdfService chrome
 @inject WinnovativePdfService winn
@@ -103,13 +103,13 @@
         try
         {
             using var pdf = await chrome.RenderPdfAsync("<h1>Test</h1><button>Stuff</button>");
-            toast.AddInformation("Successfuly created PDF");
+            toasts.AddInformation("Successfuly created PDF");
 
             await download.DownloadAsync(pdf, $"HtmlPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
         }
         catch (Exception ex)
         {
-            toast.AddError(ex.Message);
+            toasts.AddError(ex.Message);
         }
     }
 
@@ -120,13 +120,13 @@
             var self = nav.BaseUri.JoinUri("templates/test-pdf");
 
             using var pdf = await chrome.RenderPdfAsync(new Uri(self), additionalDelay: 2000);
-            toast.AddInformation("Successfuly created PDF");
+            toasts.AddInformation("Successfuly created PDF");
 
             await download.DownloadAsync(pdf, $"UriPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
         }
         catch (Exception ex)
         {
-            toast.AddError(ex.Message);
+            toasts.AddError(ex.Message);
         }
     }
 
@@ -135,12 +135,12 @@
         try
         {
             using var pdf = await winn.RenderPdfAsync("<h1>Test</h1><button>Stuff</button>");
-            toast.AddInformation("Successfuly created PDF");
+            toasts.AddInformation("Successfuly created PDF");
 
             await download.DownloadAsync(pdf, $"HtmlPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
         } catch (Exception ex)
         {
-            toast.AddError(ex.Message);
+            toasts.AddError(ex.Message);
         }
     }
 
@@ -151,12 +151,12 @@
             var self = nav.BaseUri.JoinUri("templates/test-pdf");
 
             using var pdf = await winn.RenderPdfAsync(new Uri(self), additionalDelay: 2000);
-            toast.AddWarning("This configuration is known to not work correctly");
+            toasts.AddWarning("This configuration is known to not work correctly");
 
             await download.DownloadAsync(pdf, $"UriPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
         } catch (Exception ex)
         {
-            toast.AddError(ex.Message);
+            toasts.AddError(ex.Message);
         }
     }
 }

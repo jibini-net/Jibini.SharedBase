@@ -2,10 +2,11 @@
 @namespace Jibini.SharedBase.Auth.Pages
 @inject IHxMessengerService toasts
 @inject IHxMessageBoxService messages
-
 @inject AccountRepository accounts
 
-<EditForm Model="stub" Context="_" class="mb-3">
+<EditForm Model="@stub"
+    Context="_"
+    class="mb-3">
 
     <CustomSelect @bind-Selected="@selected"
         AllowBlank="@true"
@@ -30,13 +31,16 @@
 
         <HxInputText @bind-Value="@selected!.FirstName"
             Label="First Name"
-            ShowValidationMessage="@false" />
+            ShowValidationMessage="@false"
+            InputSize="@InputSize.Small" />
+
         <HxInputText @bind-Value="@selected!.LastName"
             Label="Last Name"
             ShowValidationMessage="@false"
-            CssClass="mb-2" />
+            CssClass="mb-2"
+            InputSize="@InputSize.Small" />
 
-        <HxSubmit Color="ThemeColor.Primary">Validate</HxSubmit>
+        <HxSubmit Color="@ThemeColor.Primary">Validate</HxSubmit>
 
     </EditForm>
 }

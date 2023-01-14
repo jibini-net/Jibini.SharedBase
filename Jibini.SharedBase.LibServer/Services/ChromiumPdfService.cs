@@ -1,4 +1,5 @@
 ﻿using PuppeteerSharp;
+using System;
 
 namespace Jibini.SharedBase.Util.Services;
 
@@ -9,23 +10,42 @@ namespace Jibini.SharedBase.Util.Services;
 public class ChromiumPdfService
 {
     /// <summary>
-    /// Renders the provided static HTML or static HTML with script to PDF.
+    /// Dots per inch of the Chromium renderer, to calculate viewport size.
     /// </summary>
-    public async Task<Stream> RenderPdfAsync(string html, bool isLandscape = false, int additionalDelay = 0)
-    {
-        using var browserFetcher = new BrowserFetcher();
-        await browserFetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+    public static readonly double DEFAULT_DPI = 96.0;
 
-        using var browser = await Puppeteer.LaunchAsync(new()
+    private readonly IConfiguration config;
+
+    public ChromiumPdfService(IConfiguration config)
+    {
+        this.config = config;
+    }
+
+    /// <summary>
+    /// Shared render function for HTML and URI content to PDF.
+    /// </summary>
+    private async Task RenderPdfAsync(IBrowser browser, Stream result, bool isLandscape = false, int additionalDelay = 0, string? html = "", string? uri = "")
+    {
+        using var page = await browser.NewPageAsync();
+
+        await page.SetViewportAsync(new()
         {
-            Headless = true
+            Width = (int)Math.Round(DEFAULT_DPI * (isLandscape ? 11 : 8.5)),
+            Height = (int)Math.Round(DEFAULT_DPI * (isLandscape ? 8.5 : 11)),
+            DeviceScaleFactor = 4
         });
 
-        using var page = await browser.NewPageAsync();
-        await page.SetContentAsync(html);
+        if (!string.IsNullOrEmpty(html))
+        {
+            await page.SetContentAsync(html);
+        } else if (!string.IsNullOrEmpty(uri))
+        {
+            await page.GoToAsync(uri);
+        }
+
         await Task.Delay(additionalDelay);
 
-        return await page.PdfStreamAsync(new()
+        using var pdf = await page.PdfStreamAsync(new()
         {
             Landscape = isLandscape,
             MarginOptions = new()
@@ -36,6 +56,34 @@ public class ChromiumPdfService
                 Right = "0.35in"
             }
         });
+
+        await pdf.CopyToAsync(result);
+        result.Position = 0;
+    }
+
+    /// <summary>
+    /// Renders the provided static HTML or static HTML with script to PDF.
+    /// </summary>
+    public async Task<Stream> RenderPdfAsync(string html, bool isLandscape = false, int additionalDelay = 0)
+    {
+        using var browserFetcher = new BrowserFetcher();
+        await browserFetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+
+        using var browser = await Puppeteer.LaunchAsync(new()
+        {
+            Headless = true,
+            IgnoreHTTPSErrors = config.GetValue<bool>("Chromium:IgnoreHttpsErrors")
+        });
+
+        var result = new MemoryStream();
+        try
+        {
+            await RenderPdfAsync(browser, result, isLandscape, additionalDelay, html: html);
+        } finally
+        {
+            await browser.CloseAsync();
+        }
+        return result;
     }
 
     /// <summary>
@@ -48,23 +96,18 @@ public class ChromiumPdfService
 
         using var browser = await Puppeteer.LaunchAsync(new()
         {
-            Headless = true
+            Headless = true,
+            IgnoreHTTPSErrors = config.GetValue<bool>("Chromium:IgnoreHttpsErrors")
         });
 
-        using var page = await browser.NewPageAsync();
-        await page.GoToAsync(uri.ToString());
-        await Task.Delay(additionalDelay);
-
-        return await page.PdfStreamAsync(new()
+        var result = new MemoryStream();
+        try
         {
-            Landscape = isLandscape,
-            MarginOptions = new()
-            {
-                Top = "0.35in",
-                Bottom = "0.35in",
-                Left = "0.35in",
-                Right = "0.35in"
-            }
-        });
+            await RenderPdfAsync(browser, result, isLandscape, additionalDelay, uri: uri.ToString());
+        } finally
+        {
+            await browser.CloseAsync();
+        }
+        return result;
     }
 }
