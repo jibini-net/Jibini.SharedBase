@@ -1,11 +1,7 @@
 ﻿@page "/templates/test-pdf"
 @layout TemplateLayout
 @namespace Jibini.SharedBase.Server.Pages
-@using ChartJs.Blazor.Charts
-@using ChartJs.Blazor.ChartJS.Common
-@using ChartJs.Blazor.ChartJS.Common.Axes
-@using ChartJs.Blazor.ChartJS.Common.Enums
-@using ChartJs.Blazor.ChartJS.LineChart
+@inject IJSRuntime js
 
 <PageTitle>Test PDF Template</PageTitle>
 
@@ -44,8 +40,7 @@
         <div class="col-8">
 
             <div class="p-1 pe-5 border border-dark" style="border-style: dashed !important;">
-                <ChartJs.Blazor.Charts.ChartJsLineChart Config="@_config.Value[copy]"
-                    Height="220" />
+                <canvas id="@guid" />
             </div>
 
         </div>
@@ -70,96 +65,62 @@
 @code {
     private const int NUM_CHARTS = 20;
 
-    private Lazy<LineConfig[]> _config = new(() =>
-    {
-        var results = new LineConfig[NUM_CHARTS];
-        for (int i = 0; i < NUM_CHARTS; i++)
-            results[i] = GenerateConfig();
+    private readonly Guid guid = Guid.NewGuid();
+    private IJSObjectReference? chart;
 
-        return results;
-    });
-
-    private static LineConfig GenerateConfig()
+    public class InteropDataset
     {
-        var result = new LineConfig()
+        public string Name { get; set; } = "Dataset";
+        public string Color { get; set; } = "grey";
+        public List<decimal> Series { get; set; } = new();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        
+        var script = await js.InvokeAsync<IJSObjectReference>("import", "./js/test-graph.js");
+        if (chart is null)
         {
-            Options = new()
-            {
-                Animation = new() { Duration = 0 },
-                Legend = new()
-                {
-                    Display = true,
-                    Position = Position.Right,
-                    Labels = new() { BoxWidth = 4 }
-                },
-                MaintainAspectRatio = false,
-                Responsive = true,
-                ResponsiveAnimationDuration = 0,
-                Title = new()
-                {
-                    Display = true,
-                    Text = "Test Graph"
-                },
-                Scales = new()
-                {
-                    xAxes = new()
-                    {
-                        new LinearCartesianAxis()
-                        {
-                            ScaleLabel = new() { LabelString = "X-axis" }
-                        }
-                    },
-                    yAxes = new()
-                    {
-                        new LinearCartesianAxis()
-                        {
-                            ScaleLabel = new() { LabelString = "Y-axis" }
-                        }
-                    }
-                }
-            }
-        };
+            chart = await script.InvokeAsync<IJSObjectReference>("TestGraph.init", guid);
+        }
+        if (chart is not null)
+        {
+            await script.InvokeVoidAsync("TestGraph.update", chart, GenerateDatasets());
+        }
+    }
 
-        var series = new List<LineDataset<Point>>()
+    private static List<InteropDataset> GenerateDatasets()
+    {
+        var series = new List<InteropDataset>()
         {
             new()
             {
-                BorderColor = "red",
-                Label = "Red",
-                BorderWidth = 2
+                Name = "Red",
+                Color = "red"
             },
             new()
             {
-                BorderColor = "orange",
-                Label = "Orange",
-                BorderWidth = 2
+                Name = "Orange",
+                Color = "orange"
             },
             new()
             {
-                BorderColor = "green",
-                Label = "Green",
-                BorderWidth = 2
+                Name = "Green",
+                Color = "green"
             },
         };
 
         for (int i = 0; i < 3; i++)
         {
             double jog = 0.0;
-
             for (int x = 0; x < 150; x++)
             {
-                series[i].Add(new(x,
-                    Math.Sin(((double)x / 150) * 3.14 * 2 + jog / 2) * 50
-                        + Math.Cos(jog) * 30
-                ));
-
+                series[i].Series.Add((decimal)(Math.Sin(((double)x / 150) * 3.14 * 2 + jog / 2) * 50
+                        + Math.Cos(jog) * 30));
                 jog += Random.Shared.NextDouble() - 0.5;
             }
         }
-
-        foreach (var s in series)
-            result.Data.Datasets.Add(s);
-
-        return result;
+        return series;
     }
 }

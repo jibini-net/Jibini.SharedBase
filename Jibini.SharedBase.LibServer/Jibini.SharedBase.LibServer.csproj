@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ChartJs.Blazor" Version="1.1.0" />
     <PackageReference Include="MailKit" Version="3.4.3" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
     <PackageReference Include="PuppeteerSharp" Version="9.0.0" />

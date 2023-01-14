@@ -32,7 +32,7 @@ public class ChromiumPdfService
         {
             Width = (int)Math.Round(DEFAULT_DPI * (isLandscape ? 11 : 8.5)),
             Height = (int)Math.Round(DEFAULT_DPI * (isLandscape ? 8.5 : 11)),
-            DeviceScaleFactor = 4
+            DeviceScaleFactor = 8
         });
 
         if (!string.IsNullOrEmpty(html))
@@ -47,6 +47,8 @@ public class ChromiumPdfService
 
         using var pdf = await page.PdfStreamAsync(new()
         {
+            Width = "8.5in",
+            Height = "11in",
             Landscape = isLandscape,
             MarginOptions = new()
             {
