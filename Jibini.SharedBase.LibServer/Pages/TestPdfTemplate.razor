@@ -7,13 +7,16 @@
 
 @{
     using var http = new System.Net.Http.HttpClient();
-    var titles = new Task<string>[5];
-    var messages = new Task<string>[5];
+    var titles = new Task<string>[10];
+    var messages = new Task<string>[50];
 
-    for (int i = 0; i < messages.Length; i++)
+    for (int i = 0; i < titles.Length; i++)
     {
         titles[i] = http.GetStringAsync("https://hipsum.co/api/?type=hipster-centric&sentences=1");
-        messages[i] = http.GetStringAsync("https://hipsum.co/api/?type=hipster-centric&sentences=2");
+    }
+    for (int i = 0; i < messages.Length; i++)
+    {
+        messages[i] = http.GetStringAsync($"https://hipsum.co/api/?type=hipster-centric&sentences={Random.Shared.Next(2, 8)}");
     }
 }
 
@@ -27,12 +30,20 @@
             <div class="col-4">
 
                 @{
-                    var t = titles[i % messages.Length].Result.ParseTo<List<string>>()!;
-                    var m = messages[i % messages.Length].Result.ParseTo<List<string>>()!;
+                    var _t = titles[i % titles.Length];
+                    var _m = messages[i % messages.Length];
+                    try
+                    {
+                        _t.Wait();
+                        _m.Wait();
+                    } catch { }
+
+                    var t = _t.IsCompletedSuccessfully ? _t.Result.ParseTo<List<string>>()!.First() : "API error";
+                    var m = _m.IsCompletedSuccessfully ? _m.Result.ParseTo<List<string>>()!.First() : (_m.Exception?.Message ?? "API error");
                 }
 
-                <p><strong>@(t[0])</strong></p>
-                <p>@(m[0])</p>
+                <p><strong>@t</strong></p>
+                <p>@m</p>
 
             </div>
         }
@@ -40,7 +51,12 @@
         <div class="col-8">
 
             <div class="p-1 pe-5 border border-dark" style="border-style: dashed !important;">
-                <canvas id="@guid" />
+                
+                <ChartJs CompanionScript="./js/test-graph.js"
+                    CompanionObject="TestGraph"
+                    Style="width: 100%;height: 25rem;"
+                    GenerateDatasets="@GenerateDatasets" />
+
             </div>
 
         </div>
@@ -50,20 +66,42 @@
             <div class="col-4">
 
                 @{
-                    var t = titles[i % messages.Length].Result.ParseTo<List<string>>()!;
-                    var m = messages[i % messages.Length].Result.ParseTo<List<string>>()!;
+                    var _t = titles[i % titles.Length];
+                    var _m = messages[i % messages.Length];
+                    try
+                    {
+                        _t.Wait();
+                        _m.Wait();
+                    } catch { }
+
+                    var t = _t.IsCompletedSuccessfully ? _t.Result.ParseTo<List<string>>()!.First() : "API error";
+                    var m = _m.IsCompletedSuccessfully ? _m.Result.ParseTo<List<string>>()!.First() : (_m.Exception?.Message ?? "API error");
                 }
 
-                <p><strong>@(t[0])</strong></p>
-                <p>@(m[0])</p>
+                <p><strong>@t</strong></p>
+                <p>@m</p>
 
             </div>
         }
     </div>
+
+    var bound = Random.Shared.Next(1, 20);
+    for (int j = 0; j < bound; j++)
+    {
+        var _m = messages[Random.Shared.Next(0, messages.Length)];
+        try
+        {
+            _m.Wait();
+        } catch { }
+        
+        var m = _m.IsCompletedSuccessfully ? _m.Result.ParseTo<List<string>>()!.First() : (_m.Exception?.Message ?? "API error");
+        <p>@m</p>
+    }
+    <br />
 }
 
 @code {
-    private const int NUM_CHARTS = 20;
+    private const int NUM_CHARTS = 12;
 
     private readonly Guid guid = Guid.NewGuid();
     private IJSObjectReference? chart;
@@ -73,21 +111,6 @@
         public string Name { get; set; } = "Dataset";
         public string Color { get; set; } = "grey";
         public List<decimal> Series { get; set; } = new();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-        
-        var script = await js.InvokeAsync<IJSObjectReference>("import", "./js/test-graph.js");
-        if (chart is null)
-        {
-            chart = await script.InvokeAsync<IJSObjectReference>("TestGraph.init", guid);
-        }
-        if (chart is not null)
-        {
-            await script.InvokeVoidAsync("TestGraph.update", chart, GenerateDatasets());
-        }
     }
 
     private static List<InteropDataset> GenerateDatasets()
@@ -114,10 +137,9 @@
         for (int i = 0; i < 3; i++)
         {
             double jog = 0.0;
-            for (int x = 0; x < 150; x++)
+            for (int x = 0; x < 60; x++)
             {
-                series[i].Series.Add((decimal)(Math.Sin(((double)x / 150) * 3.14 * 2 + jog / 2) * 50
-                        + Math.Cos(jog) * 30));
+                series[i].Series.Add((decimal)(Math.Sin(((double)x / 60) * 3.14 * 2 + jog / 2) * 50  + Math.Cos(jog) * 30));
                 jog += Random.Shared.NextDouble() - 0.5;
             }
         }

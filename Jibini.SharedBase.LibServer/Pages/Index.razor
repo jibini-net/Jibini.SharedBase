@@ -121,7 +121,7 @@
         {
             var self = nav.BaseUri.JoinUri("templates/test-pdf");
 
-            using var pdf = await chrome.RenderPdfAsync(new Uri(self), additionalDelay: 2000);
+            using var pdf = await chrome.RenderPdfAsync(new Uri(self), additionalDelay: 2600);
             toasts.AddInformation("Successfuly created PDF");
 
             await download.DownloadAsync(pdf, $"UriPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
