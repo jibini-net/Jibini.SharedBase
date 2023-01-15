@@ -20,11 +20,12 @@
             <HxCard CssClass="p-3 mb-3">
                 <HxCardSubtitle CssClass="mb-3">Chromium</HxCardSubtitle>
 
-                <label class="mb-2">ChartJs.Blazor</label>
+                <label class="mb-2">Chart.js</label>
                 <div class="d-inline-block mb-3">
                     <HxButton OnClick="@OnHtmlClickChrome"
                         Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Primary">
+                        Color="@ThemeColor.Primary"
+                        Enabled="@false">
                         HTML
                     </HxButton>
 
@@ -36,6 +37,22 @@
                 </div>
 
                 <label class="mb-2">OxyPlot (SVG)</label>
+                <div class="d-inline-block mb-3">
+                    <HxButton OnClick="@OnHtmlClickChrome"
+                        Icon="@BootstrapIcon.Download"
+                        Color="@ThemeColor.Primary"
+                        Enabled="@false">
+                        HTML
+                    </HxButton>
+
+                    <HxButton OnClick="@OnUriClickChrome"
+                        Icon="@BootstrapIcon.Download"
+                        Color="@ThemeColor.Secondary">
+                        URI
+                    </HxButton>
+                </div>
+
+                <label class="mb-2">Plain HTML</label>
                 <div class="d-inline-block">
                     <HxButton OnClick="@OnHtmlClickChrome"
                         Icon="@BootstrapIcon.Download"
@@ -45,7 +62,8 @@
 
                     <HxButton OnClick="@OnUriClickChrome"
                         Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Secondary">
+                        Color="@ThemeColor.Secondary"
+                        Enabled="@false">
                         URI
                     </HxButton>
                 </div>
@@ -57,6 +75,7 @@
             <HxCard CssClass="p-3 mb-3">
                 <HxCardSubtitle CssClass="mb-3">Winnovative</HxCardSubtitle>
 
+                @*
                 <label class="mb-2">ChartJs.Blazor</label>
                 <div class="d-inline-block mb-3">
                     <HxButton OnClick="@OnHtmlClickWinn"
@@ -73,7 +92,7 @@
                 </div>
 
                 <label class="mb-2">OxyPlot (SVG)</label>
-                <div class="d-inline-block">
+                <div class="d-inline-block mb-3">
                     <HxButton OnClick="@OnHtmlClickWinn"
                         Icon="@BootstrapIcon.Download"
                         Color="@ThemeColor.Primary">
@@ -86,6 +105,23 @@
                         URI
                     </HxButton>
                 </div>
+                *@
+
+                <label class="mb-2">Plain HTML</label>
+                <div class="d-inline-block">
+                    <HxButton OnClick="@OnHtmlClickWinn"
+                        Icon="@BootstrapIcon.Download"
+                        Color="@ThemeColor.Primary">
+                        HTML
+                    </HxButton>
+
+                    <HxButton OnClick="@OnUriClickWinn"
+                        Icon="@BootstrapIcon.Download"
+                        Color="@ThemeColor.Secondary"
+                        Enabled="@false">
+                        URI
+                    </HxButton>
+                </div>
             </HxCard>
 
         </div>
@@ -94,8 +130,10 @@
     <HxCard CssClass="p-3 mb-3 bg-secondary shadow-sm">
         <HxCardTitle CssClass="m-0">Another Section</HxCardTitle>
     </HxCard>
-
-    <TestPdfTemplate />
+            
+    <HxCard CssClass="p-3 mb-3">
+        <TestPdfTemplate />
+    </HxCard>
 
 </div>
 
@@ -121,7 +159,7 @@
         {
             var self = nav.BaseUri.JoinUri("templates/test-pdf");
 
-            using var pdf = await chrome.RenderPdfAsync(new Uri(self), additionalDelay: 2600);
+            using var pdf = await chrome.RenderPdfAsync(new Uri(self));
             toasts.AddInformation("Successfuly created PDF");
 
             await download.DownloadAsync(pdf, $"UriPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
@@ -152,7 +190,7 @@
         {
             var self = nav.BaseUri.JoinUri("templates/test-pdf");
 
-            using var pdf = await winn.RenderPdfAsync(new Uri(self), additionalDelay: 2000);
+            using var pdf = await winn.RenderPdfAsync(new Uri(self));
             toasts.AddWarning("This configuration is known to not work correctly");
 
             await download.DownloadAsync(pdf, $"UriPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");

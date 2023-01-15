@@ -7,17 +7,36 @@
 
 @{
     using var http = new System.Net.Http.HttpClient();
-    var titles = new Task<string>[10];
-    var messages = new Task<string>[50];
+    var titles = new string[10];
+    var messages = new string[30];
 
-    for (int i = 0; i < titles.Length; i++)
+    var sentence = () =>
     {
-        titles[i] = http.GetStringAsync("https://hipsum.co/api/?type=hipster-centric&sentences=1");
-    }
-    for (int i = 0; i < messages.Length; i++)
-    {
-        messages[i] = http.GetStringAsync($"https://hipsum.co/api/?type=hipster-centric&sentences={Random.Shared.Next(2, 8)}");
-    }
+        var result = new System.Text.StringBuilder();
+        result.Append((char)('A' + Random.Shared.Next(0, 26)));
+
+        var words = Random.Shared.Next(4, 16);
+        for (int i = 0; i < words; i++)
+        {
+            var letters = Random.Shared.Next(1, 8);
+            for (int j = 0; j < letters; j++)
+            {
+                result.Append((char)('a' + Random.Shared.Next(0, 26)));
+            }
+            if (i != words - 1)
+            {
+                result.Append(" ");
+            }
+        }
+
+        result.Append(".");
+        return result.ToString();
+    };
+
+    var paragraph = () => string.Join("  ", from _ in Enumerable.Range(0, Random.Shared.Next(5, 16)) select sentence());
+
+    titles = (from _ in titles select sentence()).ToArray();
+    messages = (from _ in messages select paragraph()).ToArray();
 }
 
 @for (int i = 0; i < NUM_CHARTS; i++)
@@ -30,16 +49,8 @@
             <div class="col-4">
 
                 @{
-                    var _t = titles[i % titles.Length];
-                    var _m = messages[i % messages.Length];
-                    try
-                    {
-                        _t.Wait();
-                        _m.Wait();
-                    } catch { }
-
-                    var t = _t.IsCompletedSuccessfully ? _t.Result.ParseTo<List<string>>()!.First() : "API error";
-                    var m = _m.IsCompletedSuccessfully ? _m.Result.ParseTo<List<string>>()!.First() : (_m.Exception?.Message ?? "API error");
+                    var t = titles[i % titles.Length];
+                    var m = messages[i % messages.Length];
                 }
 
                 <p><strong>@t</strong></p>
@@ -66,16 +77,8 @@
             <div class="col-4">
 
                 @{
-                    var _t = titles[i % titles.Length];
-                    var _m = messages[i % messages.Length];
-                    try
-                    {
-                        _t.Wait();
-                        _m.Wait();
-                    } catch { }
-
-                    var t = _t.IsCompletedSuccessfully ? _t.Result.ParseTo<List<string>>()!.First() : "API error";
-                    var m = _m.IsCompletedSuccessfully ? _m.Result.ParseTo<List<string>>()!.First() : (_m.Exception?.Message ?? "API error");
+                    var t = titles[i % titles.Length];
+                    var m = messages[i % messages.Length];
                 }
 
                 <p><strong>@t</strong></p>
@@ -88,20 +91,14 @@
     var bound = Random.Shared.Next(1, 20);
     for (int j = 0; j < bound; j++)
     {
-        var _m = messages[Random.Shared.Next(0, messages.Length)];
-        try
-        {
-            _m.Wait();
-        } catch { }
-        
-        var m = _m.IsCompletedSuccessfully ? _m.Result.ParseTo<List<string>>()!.First() : (_m.Exception?.Message ?? "API error");
+        var m = messages[Random.Shared.Next(0, messages.Length)];
         <p>@m</p>
     }
     <br />
 }
 
 @code {
-    private const int NUM_CHARTS = 12;
+    private const int NUM_CHARTS = 4;
 
     private readonly Guid guid = Guid.NewGuid();
     private IJSObjectReference? chart;

@@ -43,6 +43,7 @@ public class ChromiumPdfService
             await page.GoToAsync(uri);
         }
 
+        await page.WaitForNetworkIdleAsync();
         await Task.Delay(additionalDelay);
 
         using var pdf = await page.PdfStreamAsync(new()
