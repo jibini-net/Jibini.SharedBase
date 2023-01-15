@@ -24,6 +24,7 @@ public static class ProgramStartupExtensions
 
         services.AddSingleton<DatabaseService>();
         services.AddSingleton<ChromiumPdfService>();
+        services.AddSingleton<IPdfService>((sp) => sp.GetService<ChromiumPdfService>()!);
         services.AddScoped<DownloadService>();
         services.AddScoped<WinnovativePdfService>();
     }

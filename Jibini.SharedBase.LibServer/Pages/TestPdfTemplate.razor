@@ -63,10 +63,14 @@
 
             <div class="p-1 pe-5 border border-dark" style="border-style: dashed !important;">
                 
-                <ChartJs CompanionScript="./js/test-graph.js"
+                <JsComponent CompanionScript="./js/test-graph.js"
                     CompanionObject="TestGraph"
                     Style="width: 100%;height: 25rem;"
-                    GenerateDatasets="@GenerateDatasets" />
+                    GenerateData="@GenerateDatasets">
+
+                    <canvas style="width: 100%;height: 100%;" />
+
+                </JsComponent>
 
             </div>
 
@@ -101,7 +105,6 @@
     private const int NUM_CHARTS = 4;
 
     private readonly Guid guid = Guid.NewGuid();
-    private IJSObjectReference? chart;
 
     public class InteropDataset
     {

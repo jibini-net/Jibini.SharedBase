@@ -1,5 +1,4 @@
 ﻿using PuppeteerSharp;
-using System;
 
 namespace Jibini.SharedBase.Util.Services;
 
@@ -7,7 +6,7 @@ namespace Jibini.SharedBase.Util.Services;
 /// Provides PDf rendering for complex HTML layouts including Blazor components,
 /// modern JavaScript, 2D canvases, and websockets.
 /// </summary>
-public class ChromiumPdfService
+public class ChromiumPdfService : IPdfService
 {
     /// <summary>
     /// Dots per inch of the Chromium renderer, to calculate viewport size.
@@ -64,9 +63,7 @@ public class ChromiumPdfService
         result.Position = 0;
     }
 
-    /// <summary>
-    /// Renders the provided static HTML or static HTML with script to PDF.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<Stream> RenderPdfAsync(string html, bool isLandscape = false, int additionalDelay = 0)
     {
         using var browserFetcher = new BrowserFetcher();
@@ -89,9 +86,7 @@ public class ChromiumPdfService
         return result;
     }
 
-    /// <summary>
-    /// Renders the content at the provided location as the contents of a PDF.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<Stream> RenderPdfAsync(Uri uri, bool isLandscape = false, int additionalDelay = 0)
     {
         using var browserFetcher = new BrowserFetcher();

@@ -1,6 +1,6 @@
 ﻿var TestGraph = {
     init: (guid) => {
-        var canvas = document.getElementById(guid);
+        var canvas = document.getElementById(guid).querySelector("canvas");
         if (!canvas) return null;
 
         var config = {

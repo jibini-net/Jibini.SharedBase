@@ -1,0 +1,92 @@
+﻿@namespace Jibini.SharedBase.Components
+@implements IDisposable
+@inject IJSRuntime js
+
+@* AREA CONTROLED IN JS BY ASSOCIATED ID *@
+<div id="@Id" style="@Style">@ChildContent</div>
+
+@code {
+    /// <summary>
+    /// Base content of the component, contained inside of a <c>div</c> with the
+    /// generated ID and provided styles applied.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Path to the JS file containing the scripts for this control. Usually
+    /// this needs to start with <c>./js/</c> to import correctly.
+    /// </summary>
+    [Parameter]
+    public string CompanionScript { get; set; } = "";
+
+    /// <summary>
+    /// Singleton object exported by the script used to control this component.
+    /// </summary>
+    [Parameter]
+    public string CompanionObject { get; set; } = "";
+
+    /// <summary>
+    /// Styling applied directly to the element container, which can be used to
+    /// control the element's size.
+    /// </summary>
+    [Parameter]
+    public string Style { get; set; } = "";
+
+    /// <summary>
+    /// Provide a relationship between the state of the surrounding page and the
+    /// set of data accepted by the update script action. This is the exact
+    /// object which will be serialized and provided as <c>newData</c>.
+    /// </summary>
+    [Parameter]
+    public Func<object> GenerateData { get; set; } = (() => new List<object>());
+
+    /// <summary>
+    /// Persistent ID of the container on the page to use as reference in JS.
+    /// </summary>
+    public Guid Id { get; } = Guid.NewGuid();
+
+    /// <summary>
+    /// If set, this is the imported module used to control the component.
+    /// </summary>
+    public IJSObjectReference? Script { get; private set; }
+
+    /// <summary>
+    /// If set, this is an instance of an object which can be used to invoke JS
+    /// actions associated with this specific component instance.
+    /// </summary>
+    public IJSObjectReference? Component { get; private set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        // Load the script or access the already-loaded module
+        if (Script is null)
+        {
+            Script = await js.InvokeAsync<IJSObjectReference>("import", CompanionScript);
+        }
+        // Attempts to run the init JS if it hasn't been
+        if (Component is null)
+        {
+            Component = await Script.InvokeAsync<IJSObjectReference>($"{CompanionObject}.init", Id);
+        }
+        // Updates the element with new data if it has been created
+        if (Component is not null)
+        {
+            await Script.InvokeVoidAsync($"{CompanionObject}.update", Component, GenerateData());
+        }
+    }
+
+    void IDisposable.Dispose()
+    {
+        if (Component is not null)
+        {
+            _ = Component.DisposeAsync();
+        }
+        if (Script is not null)
+        {
+            _ = Script.DisposeAsync();
+        }
+    }
+}
