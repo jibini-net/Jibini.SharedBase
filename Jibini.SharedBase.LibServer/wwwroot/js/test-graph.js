@@ -55,7 +55,8 @@
             return {
                 label: it.name,
                 data: it.series,
-                borderColor: it.color
+                borderColor: it.color,
+                backgroundColor: it.color
             };
         });
         chart.update();

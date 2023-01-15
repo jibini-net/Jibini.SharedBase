@@ -1,4 +1,5 @@
 ﻿@namespace Jibini.SharedBase.Components
+@implements IDisposable
 @inject IJSRuntime js
 
 @* CANVAS CONTROLED IN JS BY ASSOCIATED ID *@
@@ -50,15 +51,30 @@
 
         // Load the script or access the already-loaded module
         var script = await js.InvokeAsync<IJSObjectReference>("import", CompanionScript);
-        // Attempts to create the chart if it hasn't been
-        if (Chart is null)
+        try
         {
-            Chart = await script.InvokeAsync<IJSObjectReference>($"{CompanionObject}.init", Id);
+
+            // Attempts to create the chart if it hasn't been
+            if (Chart is null)
+            {
+                Chart = await script.InvokeAsync<IJSObjectReference>($"{CompanionObject}.init", Id);
+            }
+            // Updates the chart with new data if it has been created
+            if (Chart is not null)
+            {
+                await script.InvokeVoidAsync($"{CompanionObject}.update", Chart, GenerateDatasets());
+            }
+        } finally
+        {
+            _ = script.DisposeAsync();
         }
-        // Updates the chart with new data if it has been created
+    }
+
+    void IDisposable.Dispose()
+    {
         if (Chart is not null)
         {
-            await script.InvokeVoidAsync($"{CompanionObject}.update", Chart, GenerateDatasets());
+            _ = Chart.DisposeAsync();
         }
     }
 }
