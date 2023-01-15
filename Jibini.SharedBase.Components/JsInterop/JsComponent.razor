@@ -1,8 +1,10 @@
 ﻿@namespace Jibini.SharedBase.Components
 @implements IDisposable
 @inject IJSRuntime js
+@typeparam TParams
+@typeparam TNewData
 
-@* AREA CONTROLED IN JS BY ASSOCIATED ID *@
+@* AREA CONTROLED IN JS BY ASSOCIATED ID, PASSED TO `init` *@
 <div id="@Id" style="@Style">@ChildContent</div>
 
 @code {
@@ -22,6 +24,8 @@
 
     /// <summary>
     /// Singleton object exported by the script used to control this component.
+    /// On creation, the <c>init</c> function is called. After each render of
+    /// this component, the <c>update</c> function is called.
     /// </summary>
     [Parameter]
     public string CompanionObject { get; set; } = "";
@@ -34,12 +38,21 @@
     public string Style { get; set; } = "";
 
     /// <summary>
+    /// Create the params sent on the initial creation of this component. This
+    /// would include static config values or initial data for the element.
+    /// </summary>
+    [Parameter]
+    public Func<TParams>? GenerateParams { get; set; }
+
+    /// <summary>
     /// Provide a relationship between the state of the surrounding page and the
     /// set of data accepted by the update script action. This is the exact
     /// object which will be serialized and provided as <c>newData</c>.
+    /// 
+    /// This could include header and body content, or a list of chart datasets.
     /// </summary>
     [Parameter]
-    public Func<object> GenerateData { get; set; } = (() => new List<object>());
+    public Func<TNewData>? GenerateData { get; set; }
 
     /// <summary>
     /// Persistent ID of the container on the page to use as reference in JS.
@@ -69,12 +82,12 @@
         // Attempts to run the init JS if it hasn't been
         if (Component is null)
         {
-            Component = await Script.InvokeAsync<IJSObjectReference>($"{CompanionObject}.init", Id);
+            Component = await Script.InvokeAsync<IJSObjectReference>($"{CompanionObject}.init", Id, GenerateParams is null ? null : GenerateParams!());
         }
         // Updates the element with new data if it has been created
         if (Component is not null)
         {
-            await Script.InvokeVoidAsync($"{CompanionObject}.update", Component, GenerateData());
+            await Script.InvokeVoidAsync($"{CompanionObject}.update", Component, GenerateData is null ? null : GenerateData!());
         }
     }
 
