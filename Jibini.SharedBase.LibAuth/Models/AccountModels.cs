@@ -1,4 +1,6 @@
-﻿namespace Jibini.SharedBase.Auth;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Jibini.SharedBase.Auth;
 
 /// <summary>
 /// Model for all fields returned by a result set containing accounts.
@@ -7,10 +9,17 @@ public class Account : IAccount
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
+    [MaxLength(50, ErrorMessage = "First name cannot exceed 50 characters.")]
+    [Required(ErrorMessage = "First name is required.")]
     public string FirstName { get; set; } = "";
+    [MaxLength(50, ErrorMessage = "Last name cannot exceed 50 characters.")]
     public string? LastName { get; set; }
+    [MaxLength(50, ErrorMessage = "Email cannot exceed 50 characters.")]
+    [Required(ErrorMessage = "Email is required.")]
     public string Email { get; set; } = "";
+    [MaxLength(50, ErrorMessage = "Phone number cannot exceed 50 characters.")]
     public string? CellNumber { get; set; }
+    [MaxLength(50, ErrorMessage = "Phone number cannot exceed 50 characters.")]
     public string? HomeNumber { get; set; }
     public string? PasswordHash { get; set; }
     public string? PasswordSalt { get; set; }

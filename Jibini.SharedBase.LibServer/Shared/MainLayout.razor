@@ -3,15 +3,21 @@
 
 <PageTitle>Jibini.SharedBase.Server</PageTitle>
 
-<HxMessenger Position="ToastContainerPosition.TopEnd" />
+@* PAGE ELEMENTS FOR HAVIT SERVICES *@
+<HxMessenger Position="ToastContainerPosition.TopEnd" CssClass="me-4" />
 <HxMessageBoxHost />
+
+@* TARGET FOR DOWNLOAD SERVICE *@
+<iframe src="about:blank" class="d-none" id="iframe-download"></iframe>
 
 <div class="d-flex flex-row" id="layout-container">
     <NavMenu />
 
     <div id="content-backdrop" class="w-100">
         <div class="container p-4">
+
             @Body
+
         </div>
     </div>
 </div>

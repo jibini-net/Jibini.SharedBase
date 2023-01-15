@@ -1,55 +1,63 @@
 ﻿@page "/"
 @namespace Jibini.SharedBase.Auth.Pages
-@inject AccountRepository accounts
 @inject IHxMessengerService toasts
 @inject IHxMessageBoxService messages
+@inject AccountRepository accounts
 
-<EditForm Model="@stub">
+<EditForm Model="@stub"
+    Context="_"
+    class="mb-3">
 
-    <HxInputCheckbox @bind-Value="@showHtml"
-        Label="Show HTML" />
+    <CustomSelect @bind-Selected="@selected"
+        AllowBlank="@true"
+        EqualsCheck="(a, b) => a?.Id == b?.Id">
 
-    @if (showHtml)
-    {
-        <code>
-            <pre>
-                @html
-            </pre>
-        </code>
-    } else
-    {
-        @((MarkupString)html)
-    }
+        @foreach (var it in allAccounts)
+        {
+            <CustomOption Value="@it">@it.Name (@it.Id)</CustomOption>
+        }
 
-    <HxInputDate @bind-Value="@dateValue"
-        Label="Date"
-        CssClass="my-4" />
-
-    <HxButton Color="@ThemeColor.Primary"
-        Text="Hello, world!"
-        OnClick="@OnClick" />
+    </CustomSelect>
 
 </EditForm>
+
+@if (selected is not null)
+{
+    <EditForm Model="@selected"
+        Context="_"
+        OnValidSubmit="() => { }">
+
+        <DataAnnotationsValidator />
+
+        <HxInputText @bind-Value="@selected!.FirstName"
+            Label="First Name"
+            ShowValidationMessage="@false"
+            InputSize="@InputSize.Small" />
+
+        <HxInputText @bind-Value="@selected!.LastName"
+            Label="Last Name"
+            ShowValidationMessage="@false"
+            CssClass="mb-2"
+            InputSize="@InputSize.Small" />
+
+        <HxSubmit Color="@ThemeColor.Primary">Validate</HxSubmit>
+
+    </EditForm>
+}
 
 @code {
     private object stub = new { };
 
-    private string _html => new PasswordResetEmail(accounts.Get(1)!, "https://google.com").ToHtml();
-    private string html = "";
-    private bool showHtml = false;
+    private List<Account> allAccounts = new();
+    private Account? selected;
 
-    private DateTime dateValue = DateTime.Now;
+    private string text = "";
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        html = _html;
-    }
-
-    private async Task OnClick()
-    {
-        await messages.ShowAsync("Test", "Hello, world!");
-        toasts.AddInformation("Hello, world!");
+        allAccounts.Add(accounts.Get(1)!);
+        allAccounts.Add(accounts.Get(5)!);
     }
 }
