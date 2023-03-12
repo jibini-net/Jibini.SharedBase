@@ -34,8 +34,7 @@ public class AccountRepository
                 new()
                 {
                     Id = id
-                })
-            .Single()!;
+                })!;
 
     /// <summary>
     /// Argument schema for <c>dbo.[Account_Get]</c> stored procedure.
@@ -55,8 +54,7 @@ public class AccountRepository
                 new()
                 {
                     Id = id
-                })
-            ?.SingleOrDefault();
+                });
 
     /// <summary>
     /// Gets the single record associated with the provided ID, or nothing if it
@@ -67,8 +65,7 @@ public class AccountRepository
                 new()
                 {
                     Email = email
-                })
-            ?.SingleOrDefault();
+                });
 
     /// <summary>
     /// Argument schema for <c>dbo.[Account_LogIn]</c> stored procedure.
@@ -86,8 +83,7 @@ public class AccountRepository
                 new()
                 {
                     Id = id
-                })
-            .Single()!;
+                })!;
 
     /// <summary>
     /// Modifies the values in the database if the specified record already
@@ -95,14 +91,12 @@ public class AccountRepository
     /// </summary>
     public Account Set(ISetAccount account) =>
         database.CallProcForJson<ISetAccount, Account>("dbo.[Account_Set]",
-                account)
-            .Single()!;
+                account)!;
 
     /// <summary>
     /// Saves only the password fields from an account detail object.
     /// </summary>
     public Account SetPassword(ISetAccountPassword account) =>
         database.CallProcForJson<ISetAccountPassword, Account>("dbo.[Account_SetPassword]",
-                account)
-            .Single()!;
+                account)!;
 }

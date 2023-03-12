@@ -26,11 +26,12 @@ public class ChromiumPdfService : IPdfService
     private async Task RenderPdfAsync(IBrowser browser, Stream result, bool isLandscape = false, int additionalDelay = 0, string? html = "", string? uri = "")
     {
         using var page = await browser.NewPageAsync();
+        var margin = 0.35;
 
         await page.SetViewportAsync(new()
         {
-            Width = (int)Math.Round(DEFAULT_DPI * (isLandscape ? 11 : 8.5)),
-            Height = (int)Math.Round(DEFAULT_DPI * (isLandscape ? 8.5 : 11)),
+            Width = (int)Math.Round(DEFAULT_DPI * ((isLandscape ? 11 : 8.5) - margin * 2)),
+            Height = (int)Math.Round(DEFAULT_DPI * ((isLandscape ? 8.5 : 11) - margin * 2)),
             DeviceScaleFactor = 8
         });
 
@@ -52,10 +53,10 @@ public class ChromiumPdfService : IPdfService
             Landscape = isLandscape,
             MarginOptions = new()
             {
-                Top = "0.35in",
-                Bottom = "0.35in",
-                Left = "0.35in",
-                Right = "0.35in"
+                Top = $"{margin:0.000}in",
+                Bottom = $"{margin:0.000}in",
+                Left = $"{margin:0.000}in",
+                Right = $"{margin:0.000}in"
             }
         });
 
@@ -72,7 +73,11 @@ public class ChromiumPdfService : IPdfService
         using var browser = await Puppeteer.LaunchAsync(new()
         {
             Headless = true,
-            IgnoreHTTPSErrors = config.GetValue<bool>("Chromium:IgnoreHttpsErrors")
+            IgnoreHTTPSErrors = config.GetValue<bool>("Chromium:IgnoreHttpsErrors"),
+            Args = new[]
+            {
+                "--no-sandbox"
+            }
         });
 
         var result = new MemoryStream();

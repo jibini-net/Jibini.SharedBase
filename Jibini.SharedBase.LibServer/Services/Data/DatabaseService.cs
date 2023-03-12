@@ -1,6 +1,7 @@
 ﻿using Jibini.SharedBase.Util.Extensions;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using System.Text;
 
 namespace Jibini.SharedBase.Util.Services;
 
@@ -40,7 +41,7 @@ public class DatabaseService
     /// Invokes a stored procedure with optional arguments, returning a set of
     /// each result row's first columns parsed to JSON.
     /// </summary>
-    public IEnumerable<TResult?> CallProcForJson<TArgs, TResult>(string name,
+    public TResult? CallProcForJson<TArgs, TResult>(string name,
         TArgs? args = default,
         string db = "DefaultConnection")
     {
@@ -53,15 +54,13 @@ public class DatabaseService
         proc.Parameters.AddArgs(args);
 
         using var results = proc.ExecuteReader();
-
+        var json = new StringBuilder();
         while (results.Read())
-        { 
-            yield return results[0] is null
-                ? default
-                : results[0]!.ToString()!.ParseTo<TResult>();
+        {
+            json.Append(results[0].ToString());
         }
 
-        yield break;
+        return json.ToString().ParseTo<TResult>();
     }
 }
 

@@ -86,5 +86,6 @@
     <Build Include="Stored Procedures\Account_SetPassword.sql" />
     <Build Include="Stored Procedures\Account_Delete.sql" />
     <Build Include="Stored Procedures\Account_LogIn.sql" />
+    <Build Include="Functions\nullableCompareBit.sql" />
   </ItemGroup>
 </Project>

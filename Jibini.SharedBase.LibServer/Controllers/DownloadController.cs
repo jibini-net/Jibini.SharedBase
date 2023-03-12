@@ -19,7 +19,7 @@ public class DownloadController : Controller
     /// <summary>
     /// Amount of time in milliseconds to wait for the user to download.
     /// </summary>
-    private const int DOWNLOAD_START_TIMEOUT = 10000;
+    private const int DOWNLOAD_START_TIMEOUT = 12000;
 
     /// <summary>
     /// Error about failed request which doesn't reveal much about the file.
@@ -32,9 +32,10 @@ public class DownloadController : Controller
     private static async Task DownloadTimeoutAsync(Guid key)
     {
         await Task.Delay(DOWNLOAD_START_TIMEOUT);
-
         if (arbitraryDownloads.Remove(key, out var removed))
+        {
             removed.data.Dispose();
+        }
     }
 
     /// <summary>
@@ -64,8 +65,9 @@ public class DownloadController : Controller
     public IActionResult Index(Guid key)
     {
         if (!arbitraryDownloads.Remove(key, out var removed))
+        {
             return StatusCode(401, VAGUE_ERROR);
-
+        }
         return File(removed.data, "application/octet-stream", removed.name);
     }
 }

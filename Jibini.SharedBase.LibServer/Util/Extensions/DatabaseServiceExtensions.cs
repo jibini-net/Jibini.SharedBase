@@ -21,7 +21,7 @@ public static class DatabaseServiceExtensions
         foreach (var prop in props)
         {
             var value = prop.GetValue(args);
-            coll.AddWithValue($"@{prop.Name}", value);
+            coll.AddWithValue($"@{prop.Name}", value ?? DBNull.Value);
         }
     }
 }

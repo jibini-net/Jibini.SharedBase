@@ -135,9 +135,9 @@
         for (int i = 0; i < 3; i++)
         {
             double jog = 0.0;
-            for (int x = 0; x < 60; x++)
+            for (int x = 0; x < 20; x++)
             {
-                series[i].Data.Add((x, (decimal)(Math.Sin(((double)x / 60) * 3.14 * 2 + jog / 2) * 50  + Math.Cos(jog) * 30)));
+                series[i].Data.Add((x, (decimal)(Math.Sin(((double)x / 20) * 3.14 * 2 + jog / 2) * 50  + Math.Cos(jog) * 30)));
                 jog += Random.Shared.NextDouble() - 0.5;
             }
         }
