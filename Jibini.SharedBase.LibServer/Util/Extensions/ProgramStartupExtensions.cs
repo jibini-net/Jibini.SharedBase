@@ -15,7 +15,11 @@ public static class ProgramStartupExtensions
     public static void AddSharedBaseServer(this IServiceCollection services)
     {
         services.AddRazorPages();
-        services.AddServerSideBlazor();
+        services.AddServerSideBlazor((config) =>
+        {
+            config.DisconnectedCircuitMaxRetained = 120;
+            config.DisconnectedCircuitRetentionPeriod = TimeSpan.FromHours(4);
+        });
         services.AddControllers();
         services.AddControllersWithViews();
         services.AddHxServices();
@@ -24,6 +28,7 @@ public static class ProgramStartupExtensions
 
         services.AddSingleton<DatabaseService>();
         services.AddSingleton<ChromiumPdfService>();
+        services.AddSingleton<IPdfService>((sp) => sp.GetService<ChromiumPdfService>()!);
         services.AddScoped<DownloadService>();
         services.AddScoped<WinnovativePdfService>();
     }

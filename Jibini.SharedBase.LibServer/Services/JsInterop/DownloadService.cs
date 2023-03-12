@@ -4,8 +4,8 @@ using Microsoft.JSInterop;
 namespace Jibini.SharedBase.Util.Services;
 
 /// <summary>
-/// Provides file downloads from within Blazor components. Requires a popup-type
-/// redirect to a new tab. Browsers complain on the first download.
+/// Provides file downloads from within Blazor components. Redirects an embedded
+/// inline frame to download buffered file contents.
 /// </summary>
 public class DownloadService
 {
@@ -22,7 +22,6 @@ public class DownloadService
     public async Task DownloadAsync(Stream data, string fileName)
     {
         var key = await DownloadController.RegisterDownloadAsync(data, fileName);
-        //await js.InvokeVoidAsync("open", , "download-portal");
         await js.InvokeVoidAsync("IframeDownloadInterop.triggerDownload", $"download/{key}");
     }
 

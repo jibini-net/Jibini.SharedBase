@@ -1,0 +1,146 @@
+﻿@page "/templates/test-pdf"
+@layout TemplateLayout
+@namespace Jibini.SharedBase.Server.Pages
+@inject IJSRuntime js
+
+<PageTitle>Test PDF Template</PageTitle>
+
+@{
+    using var http = new System.Net.Http.HttpClient();
+    var titles = new string[10];
+    var messages = new string[30];
+
+    var sentence = () =>
+    {
+        var result = new System.Text.StringBuilder();
+        result.Append((char)('A' + Random.Shared.Next(0, 26)));
+
+        var words = Random.Shared.Next(4, 16);
+        for (int i = 0; i < words; i++)
+        {
+            var letters = Random.Shared.Next(1, 8);
+            for (int j = 0; j < letters; j++)
+            {
+                result.Append((char)('a' + Random.Shared.Next(0, 26)));
+            }
+            if (i != words - 1)
+            {
+                result.Append(" ");
+            }
+        }
+
+        result.Append(".");
+        return result.ToString();
+    };
+
+    var paragraph = () => string.Join("  ", from _ in Enumerable.Range(0, Random.Shared.Next(5, 16)) select sentence());
+
+    titles = (from _ in titles select sentence()).ToArray();
+    messages = (from _ in messages select paragraph()).ToArray();
+}
+
+@for (int i = 0; i < NUM_CHARTS; i++)
+{
+    var copy = i;
+    
+    <div class="row mb-5" style="page-break-inside: avoid;">
+        @if (i % 2 == 1)
+        {
+            <div class="col-4">
+
+                @{
+                    var t = titles[i % titles.Length];
+                    var m = messages[i % messages.Length];
+                }
+
+                <p><strong>@t</strong></p>
+                <p>@m</p>
+
+            </div>
+        }
+
+        <div class="col-8">
+
+            <div class="p-1 pe-5 border border-dark" style="border-style: dashed !important;">
+                
+                @*
+                <JsComponent CompanionScript="./js/test-graph.js"
+                    CompanionObject="TestGraph"
+                    Style="width: 100%;height: 25rem;"
+                    GenerateData="@GenerateDatasets">
+
+                    <canvas style="width: 100%;height: 100%;" />
+
+                </JsComponent>
+                *@
+                <ChartJs CanvasStyle="width: 100%;height: 100%;"
+                    Style="width: 100%;height: 25rem;"
+                    GenerateDatasets="@GenerateDatasets" />
+
+            </div>
+
+        </div>
+
+        @if (i % 2 == 0)
+        {
+            <div class="col-4">
+
+                @{
+                    var t = titles[i % titles.Length];
+                    var m = messages[i % messages.Length];
+                }
+
+                <p><strong>@t</strong></p>
+                <p>@m</p>
+
+            </div>
+        }
+    </div>
+
+    var bound = Random.Shared.Next(1, 20);
+    for (int j = 0; j < bound; j++)
+    {
+        var m = messages[Random.Shared.Next(0, messages.Length)];
+        <p>@m</p>
+    }
+    <br />
+}
+
+@code {
+    private const int NUM_CHARTS = 4;
+
+    private readonly Guid guid = Guid.NewGuid();
+
+    private static IEnumerable<ChartJs<Pair<decimal>>.InteropDataset> GenerateDatasets()
+    {
+        var series = new List<ChartJs<Pair<decimal>>.InteropDataset>()
+        {
+            new()
+            {
+                Label = "Red",
+                Color = "red"
+            },
+            new()
+            {
+                Label = "Orange",
+                Color = "orange"
+            },
+            new()
+            {
+                Label = "Green",
+                Color = "green"
+            },
+        };
+
+        for (int i = 0; i < 3; i++)
+        {
+            double jog = 0.0;
+            for (int x = 0; x < 20; x++)
+            {
+                series[i].Data.Add((x, (decimal)(Math.Sin(((double)x / 20) * 3.14 * 2 + jog / 2) * 50  + Math.Cos(jog) * 30)));
+                jog += Random.Shared.NextDouble() - 0.5;
+            }
+        }
+        return series;
+    }
+}
