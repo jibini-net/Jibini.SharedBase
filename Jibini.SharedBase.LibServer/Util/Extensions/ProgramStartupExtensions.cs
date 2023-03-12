@@ -29,6 +29,7 @@ public static class ProgramStartupExtensions
         services.AddSingleton<DatabaseService>();
         services.AddSingleton<ChromiumPdfService>();
         services.AddSingleton<IPdfService>((sp) => sp.GetService<ChromiumPdfService>()!);
+        services.AddSingleton<ActiveDirectoryService>();
         services.AddScoped<DownloadService>();
         services.AddScoped<WinnovativePdfService>();
     }
@@ -43,7 +44,6 @@ public static class ProgramStartupExtensions
             app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
-
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
