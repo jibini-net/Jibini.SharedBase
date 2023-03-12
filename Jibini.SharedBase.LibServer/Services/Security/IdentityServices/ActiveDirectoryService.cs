@@ -160,7 +160,7 @@ public class ActiveDirectoryService
             {
                 AccountName = it.Properties.GetOrDefault("samaccountname")!,
                 // First name is always required, coalesce if necessary
-                FirstName = it.Properties.GetOrDefault("givenName") ?? it.Properties.GetOrDefault("samaccountname")!,
+                FirstName = it.Properties.GetOrDefault("givenname") ?? it.Properties.GetOrDefault("samaccountname")!,
                 LastName = it.Properties.GetOrDefault("sn") ?? "",
                 CommonName = it.Properties.GetOrDefault("cn")!
             })
