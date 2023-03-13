@@ -1,14 +1,28 @@
-﻿<HxSidebar MultipleItemsExpansion="false"
+﻿@namespace Jibini.SharedBase.Components
+@using Microsoft.Extensions.Options;
+@using Jibini.SharedBase.Data.Models
+@inject IOptions<SiteNavConfiguration> config
+
+<HxSidebar MultipleItemsExpansion="@true"
     ResponsiveBreakpoint="@SidebarResponsiveBreakpoint.None"
     Id="layout-sidebar"
     CssClass="shadow">
 
     <HeaderTemplate>
-        <HxSidebarBrand BrandName="Brand name"
-            BrandNameShort="BN" />
+        <HxSidebarBrand BrandName="@config.Value.Branding.BrandName">
+            <LogoTemplate>
+
+                <div class="d-flex flex-row" style="width: 100%;">
+                    <h3 class="@config.Value.Branding.BrandImage m-auto" style="font-size: 30px;"></h3>
+                </div>
+
+            </LogoTemplate>
+        </HxSidebarBrand>
     </HeaderTemplate>
 
     <ItemsTemplate>
+
+        @*
         <HxSidebarItem Text="A" Icon="@BootstrapIcon.Person" Href="" Match="NavLinkMatch.All">
             <HxSidebarItem Text="1" Href="A1" />
             <HxSidebarItem Text="2" Href="A2" />
@@ -25,6 +39,17 @@
         </HxSidebarItem>
 
         <HxSidebarItem Text="D" Href="D" Icon="BootstrapIcon.Wallet2" />
+        *@
+
+        @foreach (var it in config.Value.Pages)
+        {
+            <HxSidebarItem Text="@it.NavTitle" Href="@it.NavPath">
+                <ContentTemplate>
+                    <h6 class="@it.NavIcon @(string.IsNullOrEmpty(it.NavIcon) ? "" : "me-2")"></h6>
+                </ContentTemplate>
+            </HxSidebarItem>
+        }
+
     </ItemsTemplate>
 
 </HxSidebar>

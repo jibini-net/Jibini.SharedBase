@@ -1,4 +1,5 @@
 ﻿using Havit.Blazor.Components.Web;
+using Jibini.SharedBase.Data.Models;
 using Jibini.SharedBase.Util.Services;
 
 namespace Jibini.SharedBase.Util.Extensions;
@@ -32,6 +33,25 @@ public static class ProgramStartupExtensions
         services.AddSingleton<ActiveDirectoryService>();
         services.AddScoped<DownloadService>();
         services.AddScoped<WinnovativePdfService>();
+
+        // Register default sidebar nav configuration
+        services.Configure<SiteNavConfiguration>((it) =>
+        {
+            it.Branding = new()
+            {
+                BrandName = "Shared Base",
+                BrandImage = "oi oi-browser"
+            };
+            it.Pages = new()
+            {
+                new()
+                {
+                    NavTitle = "Dashboard",
+                    NavTooltip = "Home landing page",
+                    NavIcon = "oi oi-home"
+                }
+            };
+        });
     }
 
     /// <summary>

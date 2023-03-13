@@ -1,202 +1,25 @@
 ﻿@page "/"
 @namespace Jibini.SharedBase.Server.Pages
 @inject NavigationManager nav
-@inject IHxMessengerService toasts
-@inject DownloadService download
-@inject IPdfService chrome
-@inject WinnovativePdfService winn
+@inject IHxMessengerService snack
 
 <PageTitle>Index</PageTitle>
 
 <div class="container">
 
     <HxCard CssClass="p-3 mb-3 bg-secondary shadow-sm">
-        <HxCardTitle CssClass="m-0">PDF Renderers</HxCardTitle>
-    </HxCard>
 
-    <div class="row mb-2">
-        <div class="col-md-6">
-            
-            <HxCard CssClass="p-3 mb-3">
-                <HxCardSubtitle CssClass="mb-3">Chromium</HxCardSubtitle>
+        <HxCardTitle>Hello, world!</HxCardTitle>
+        <HxCardSubtitle CssClass="mb-3">Foo, bar</HxCardSubtitle>
 
-                <label class="mb-2">Chart.js</label>
-                <div class="d-inline-block mb-3">
-                    <HxButton OnClick="@OnHtmlClickChrome"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Primary"
-                        Enabled="@false">
-                        HTML
-                    </HxButton>
+        <HxCardText>
+            Test, test, test, test, test
+        </HxCardText>
 
-                    <HxButton OnClick="@OnUriClickChrome"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Secondary">
-                        URI
-                    </HxButton>
-                </div>
-
-                <label class="mb-2">OxyPlot (SVG)</label>
-                <div class="d-inline-block mb-3">
-                    <HxButton OnClick="@OnHtmlClickChrome"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Primary"
-                        Enabled="@false">
-                        HTML
-                    </HxButton>
-
-                    <HxButton OnClick="@OnUriClickChrome"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Secondary">
-                        URI
-                    </HxButton>
-                </div>
-
-                <label class="mb-2">Plain HTML</label>
-                <div class="d-inline-block">
-                    <HxButton OnClick="@OnHtmlClickChrome"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Primary">
-                        HTML
-                    </HxButton>
-
-                    <HxButton OnClick="@OnUriClickChrome"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Secondary"
-                        Enabled="@false">
-                        URI
-                    </HxButton>
-                </div>
-            </HxCard>
-
-        </div>
-        <div class="col-md-6">
-            
-            <HxCard CssClass="p-3 mb-3">
-                <HxCardSubtitle CssClass="mb-3">Winnovative</HxCardSubtitle>
-
-                @*
-                <label class="mb-2">ChartJs.Blazor</label>
-                <div class="d-inline-block mb-3">
-                    <HxButton OnClick="@OnHtmlClickWinn"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Primary">
-                        HTML
-                    </HxButton>
-
-                    <HxButton OnClick="@OnUriClickWinn"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Secondary">
-                        URI
-                    </HxButton>
-                </div>
-
-                <label class="mb-2">OxyPlot (SVG)</label>
-                <div class="d-inline-block mb-3">
-                    <HxButton OnClick="@OnHtmlClickWinn"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Primary">
-                        HTML
-                    </HxButton>
-
-                    <HxButton OnClick="@OnUriClickWinn"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Secondary">
-                        URI
-                    </HxButton>
-                </div>
-                *@
-
-                <label class="mb-2">Plain HTML</label>
-                <div class="d-inline-block">
-                    <HxButton OnClick="@OnHtmlClickWinn"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Primary">
-                        HTML
-                    </HxButton>
-
-                    <HxButton OnClick="@OnUriClickWinn"
-                        Icon="@BootstrapIcon.Download"
-                        Color="@ThemeColor.Secondary"
-                        Enabled="@false">
-                        URI
-                    </HxButton>
-                </div>
-            </HxCard>
-
-        </div>
-    </div>
-
-    <HxCard CssClass="p-3 mb-3 bg-secondary shadow-sm">
-        <HxCardTitle CssClass="m-0">Another Section</HxCardTitle>
-    </HxCard>
-            
-    <HxCard CssClass="p-3 mb-3">
-        <TestPdfTemplate />
     </HxCard>
 
 </div>
 
 @code {
-    private async Task OnHtmlClickChrome()
-    {
-        try
-        {
-            using var pdf = await chrome.RenderPdfAsync("<h1>Test</h1><button>Stuff</button>");
-            toasts.AddInformation("Successfuly created PDF");
 
-            await download.DownloadAsync(pdf, $"HtmlPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
-        }
-        catch (Exception ex)
-        {
-            toasts.AddError(ex.Message);
-        }
-    }
-
-    private async Task OnUriClickChrome()
-    {
-        try
-        {
-            var self = nav.BaseUri.JoinUri("templates/test-pdf");
-
-            using var pdf = await chrome.RenderPdfAsync(new Uri(self));
-            toasts.AddInformation("Successfuly created PDF");
-
-            await download.DownloadAsync(pdf, $"UriPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
-        }
-        catch (Exception ex)
-        {
-            toasts.AddError(ex.Message);
-        }
-    }
-
-    private async Task OnHtmlClickWinn()
-    {
-        try
-        {
-            using var pdf = await winn.RenderPdfAsync("<h1>Test</h1><button>Stuff</button>");
-            toasts.AddInformation("Successfuly created PDF");
-
-            await download.DownloadAsync(pdf, $"HtmlPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
-        } catch (Exception ex)
-        {
-            toasts.AddError(ex.Message);
-        }
-    }
-
-    private async Task OnUriClickWinn()
-    {
-        try
-        {
-            var self = nav.BaseUri.JoinUri("templates/test-pdf");
-
-            using var pdf = await winn.RenderPdfAsync(new Uri(self));
-            toasts.AddWarning("This configuration is known to not work correctly");
-
-            await download.DownloadAsync(pdf, $"UriPdf_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
-        } catch (Exception ex)
-        {
-            toasts.AddError(ex.Message);
-        }
-    }
 }
