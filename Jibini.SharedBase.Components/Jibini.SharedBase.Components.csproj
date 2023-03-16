@@ -5,6 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Layout\MainLayout.razor.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Layout\MainLayout.razor.css" />
+  </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

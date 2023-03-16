@@ -23,14 +23,6 @@
     public string CompanionScript { get; set; } = "";
 
     /// <summary>
-    /// Singleton object exported by the script used to control this component.
-    /// On creation, the <c>init</c> function is called. After each render of
-    /// this component, the <c>update</c> function is called.
-    /// </summary>
-    [Parameter]
-    public string CompanionObject { get; set; } = "";
-
-    /// <summary>
     /// Styling applied directly to the element container, which can be used to
     /// control the element's size.
     /// </summary>
@@ -70,24 +62,46 @@
     /// </summary>
     public IJSObjectReference? Component { get; private set; }
 
+    private Semaphore initGate = new(1, 1);
+    private volatile bool initTicket = false;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
 
-        // Load the script or access the already-loaded module
-        if (Script is null)
+        // Event hook can hire multiple times concurrently, but the call with
+        // `firstRender` set to `true` isn't always the first to complete;
+        // locking the whole section doesn't work because of async JS interop.
+        //
+        // Ensures that two calls don't attempt to double claim a canvas, etc.
+        var doInit = false;
+        initGate.WaitOne();
+        try
         {
-            Script = await js.InvokeAsync<IJSObjectReference>("import", CompanionScript);
+            doInit = !initTicket;
+            initTicket = true;
+        } finally
+        {
+            initGate.Release();
         }
-        // Attempts to run the init JS if it hasn't been
-        if (Component is null)
+
+        try
         {
-            Component = await Script.InvokeAsync<IJSObjectReference>($"{CompanionObject}.init", Id, GenerateParams is null ? null : GenerateParams!());
-        }
-        // Updates the element with new data if it has been created
-        if (Component is not null)
+            // Load the script or access the already-loaded module, attempts to run
+            // the init JS if it hasn't been
+            if (Component is null && doInit)
+            {
+                Script = await js.InvokeAsync<IJSObjectReference>("import", CompanionScript);
+                Component = await Script.InvokeAsync<IJSObjectReference>("init", Id, GenerateParams is null ? null : GenerateParams!());
+            }
+            // Updates the element with new data if it has been created
+            if (Component is not null)
+            {
+                await Script!.InvokeVoidAsync("update", Component, GenerateData is null ? null : GenerateData!());
+            }
+        } finally
         {
-            await Script.InvokeVoidAsync($"{CompanionObject}.update", Component, GenerateData is null ? null : GenerateData!());
+            initTicket = Component is not null;
         }
     }
 

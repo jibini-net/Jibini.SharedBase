@@ -1,7 +1,8 @@
-﻿@namespace Jibini.SharedBase.Server.Shared
+﻿@namespace Jibini.SharedBase.Components
+@inject IOptions<SiteNavConfiguration> config
 @inherits LayoutComponentBase
 
-<PageTitle>Jibini.SharedBase.Server</PageTitle>
+<PageTitle>@config.Value.Branding.BrandName</PageTitle>
 
 @* PAGE ELEMENTS FOR HAVIT SERVICES *@
 <HxMessenger Position="ToastContainerPosition.TopEnd" CssClass="me-4" />
