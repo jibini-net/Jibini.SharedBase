@@ -4,8 +4,8 @@
 @typeparam TParams
 @typeparam TNewData
 
-@* AREA CONTROLED IN JS BY ASSOCIATED ID, PASSED TO `init` *@
-<div id="@Id" style="@Style">@ChildContent</div>
+@* AREA CONTROLED IN JS BY ELEMENT REFERENCE, PASSED TO `init` *@
+<div @ref="@Element" style="@Style">@ChildContent</div>
 
 @code {
     /// <summary>
@@ -47,9 +47,9 @@
     public Func<TNewData>? GenerateData { get; set; }
 
     /// <summary>
-    /// Persistent ID of the container on the page to use as reference in JS.
+    /// Reference to the DOM element, if it is currently being displayed.
     /// </summary>
-    public Guid Id { get; } = Guid.NewGuid();
+    public ElementReference? Element { get; set; }
 
     /// <summary>
     /// If set, this is the imported module used to control the component.
@@ -92,7 +92,7 @@
             if (Component is null && doInit)
             {
                 Script = await js.InvokeAsync<IJSObjectReference>("import", CompanionScript);
-                Component = await Script.InvokeAsync<IJSObjectReference>("init", Id, GenerateParams is null ? null : GenerateParams!());
+                Component = await Script.InvokeAsync<IJSObjectReference>("init", Element, GenerateParams is null ? null : GenerateParams!());
             }
             // Updates the element with new data if it has been created
             if (Component is not null)

@@ -5,7 +5,8 @@ namespace Jibini.SharedBase.Util.Services;
 
 /// <summary>
 /// Provides file downloads from within Blazor components. Redirects an embedded
-/// inline frame to download buffered file contents.
+/// inline frame to download buffered file contents. Highly coupled to the site
+/// layout, which has a static script and inline frame for downloading.
 /// </summary>
 public class DownloadService
 {

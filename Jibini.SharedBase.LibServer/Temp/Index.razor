@@ -2,6 +2,9 @@
 @namespace Jibini.SharedBase.Server.Pages
 @inject NavigationManager nav
 @inject IHxMessengerService snack
+@inject IPdfService pdf
+@inject DownloadService download
+@inject NavigationManager nav
 
 <PageTitle>Index</PageTitle>
 
@@ -9,17 +12,27 @@
 
     <HxCard CssClass="p-3 mb-3 bg-secondary shadow-sm">
 
+        @*
         <HxCardTitle>Hello, world!</HxCardTitle>
-        <HxCardSubtitle CssClass="mb-3">Foo, bar</HxCardSubtitle>
+        <HxCardSubtitle CssClass="mb-3">Foo bar</HxCardSubtitle>
 
         <HxCardText>
-            Test, test, test, test, test
+            Bin baz
         </HxCardText>
+        *@
+
+        <HxButton @onclick="@DownloadAsync">Download</HxButton>
 
     </HxCard>
 
 </div>
 
 @code {
-
+    private async Task DownloadAsync()
+    {
+        var pdfPath = nav.BaseUri.JoinPath("templates/test-pdf");
+        using var content = await pdf.RenderPdfAsync(new Uri(pdfPath), additionalDelay: 1000);
+        
+        await download.DownloadAsync(content, $"Test_{Guid.NewGuid()}.pdf");
+    }
 }

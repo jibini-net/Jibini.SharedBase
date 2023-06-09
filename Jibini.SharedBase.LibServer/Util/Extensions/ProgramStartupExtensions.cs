@@ -1,5 +1,6 @@
 ﻿using Havit.Blazor.Components.Web;
 using Jibini.SharedBase.Data.Models;
+using Jibini.SharedBase.Middleware;
 using Jibini.SharedBase.Util.Services;
 
 namespace Jibini.SharedBase.Util.Extensions;
@@ -52,6 +53,18 @@ public static class ProgramStartupExtensions
                 }
             };
         });
+
+        // Register default service API configuration
+        services.Configure<ServiceApiConfiguration>((it) =>
+        {
+            it.SearchNamespaces = new()
+            {
+                (typeof(Program).Assembly, new[]
+                    {
+                        "Jibini.SharedBase.Services"
+                    })
+            };
+        });
     }
 
     /// <summary>
@@ -71,5 +84,8 @@ public static class ProgramStartupExtensions
         app.MapBlazorHub();
         app.MapFallbackToPage("/_Host");
         app.MapRazorPages();
+
+        app.Map("/api/{**Subpath}", ServiceApiRoutingDelegate.Handler)
+            .AddEndpointFilter<ResultStatusWrapperFilter>();
     }
 }

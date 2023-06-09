@@ -59,7 +59,6 @@ public class DatabaseService
         {
             json.Append(results[0].ToString());
         }
-
         return json.ToString().ParseTo<TResult>();
     }
 }

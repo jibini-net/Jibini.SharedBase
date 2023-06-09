@@ -1,6 +1,6 @@
-﻿function init(guid, params) {
-    var canvas = document.getElementById(guid).querySelector("canvas");
-    if (!canvas) return null;
+﻿function init(element, params) {
+    if (!element) return ({ success: false });
+    var canvas = element.querySelector("canvas");
 
     var config = {
         type: params.type,
@@ -53,6 +53,9 @@
 }
 
 function update(chart, newData) {
+    if (chart.success === false) {
+        return;
+    }
     chart.data.datasets = newData;
     chart.update();
 }
