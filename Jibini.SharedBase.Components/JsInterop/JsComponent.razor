@@ -13,7 +13,7 @@
     /// generated ID and provided styles applied.
     /// </summary>
     [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    public RenderFragment ChildContent { get; set; }
 
     /// <summary>
     /// Path to the JS file containing the scripts for this control. Usually
@@ -34,7 +34,7 @@
     /// would include static config values or initial data for the element.
     /// </summary>
     [Parameter]
-    public Func<TParams>? GenerateParams { get; set; }
+    public Func<TParams> GenerateParams { get; set; }
 
     /// <summary>
     /// Provide a relationship between the state of the surrounding page and the
@@ -44,23 +44,23 @@
     /// This could include header and body content, or a list of chart datasets.
     /// </summary>
     [Parameter]
-    public Func<TNewData>? GenerateData { get; set; }
+    public Func<TNewData> GenerateData { get; set; }
 
     /// <summary>
     /// Reference to the DOM element, if it is currently being displayed.
     /// </summary>
-    public ElementReference? Element { get; set; }
+    public ElementReference Element { get; set; }
 
     /// <summary>
     /// If set, this is the imported module used to control the component.
     /// </summary>
-    public IJSObjectReference? Script { get; private set; }
+    public IJSObjectReference Script { get; private set; }
 
     /// <summary>
     /// If set, this is an instance of an object which can be used to invoke JS
     /// actions associated with this specific component instance.
     /// </summary>
-    public IJSObjectReference? Component { get; private set; }
+    public IJSObjectReference Component { get; private set; }
 
     private Semaphore initGate = new(1, 1);
     private volatile bool initTicket = false;
@@ -97,7 +97,7 @@
             // Updates the element with new data if it has been created
             if (Component is not null)
             {
-                await Script!.InvokeVoidAsync("update", Component, GenerateData is null ? null : GenerateData!());
+                await Script.InvokeVoidAsync("update", Component, GenerateData is null ? null : GenerateData!());
             }
         } finally
         {

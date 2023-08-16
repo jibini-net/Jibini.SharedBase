@@ -1,14 +1,14 @@
 ﻿using System.DirectoryServices;
 using System.Text;
 
-namespace Jibini.SharedBase.Util.Services;
+namespace Jibini.SharedBase.Services;
 
 /// <summary>
 /// Quick extension to better interpret results sets from LDAP server.
 /// </summary>
 public static class PropExtensions
 {
-    public static string? GetOrDefault(this ResultPropertyCollection that, string key)
+    public static string GetOrDefault(this ResultPropertyCollection that, string key)
     {
         if (!that.Contains(key))
         {
@@ -57,7 +57,7 @@ public class ActiveDirectoryService
     /// </summary>
     public string ConnectAsAccount => UseServiceAccount
         ? Environment.UserName
-        : config.GetValue<string>("ActiveDirectory:Username")!;
+        : config.GetValue<string>("ActiveDirectory:Username");
 
     /// <exception cref="Exception">If the service should not run.</exception>
     private void ValidateEnabled()
@@ -82,13 +82,13 @@ public class ActiveDirectoryService
     /// <summary>
     /// Filters the list of objects to find one with a particular account CN.
     /// </summary>
-    public ActiveDirectoryAccount? FindUser(string commonName) => FindUsers(commonName, false).FirstOrDefault();
+    public ActiveDirectoryAccount FindUser(string commonName) => FindUsers(commonName, false).FirstOrDefault();
 
     /// <summary>
     /// Takes plain-text credentials and verifies them against the configured
     /// LDAP server by attempting to connect and execute a query as that user.
     /// </summary>
-    public ActiveDirectoryAccount? Authenticate(string username, string password)
+    public ActiveDirectoryAccount Authenticate(string username, string password)
     {
         try
         {
@@ -128,7 +128,7 @@ public class ActiveDirectoryService
     /// <summary>
     /// Shared query function to format and execute LDAP queries posed above.
     /// </summary>
-    private List<ActiveDirectoryAccount> FindUsers(string cnFilter, bool substring, string? username = null, string? password = null)
+    private List<ActiveDirectoryAccount> FindUsers(string cnFilter, bool substring, string username = null, string password = null)
     {
         ValidateEnabled();
         if (!substring && string.IsNullOrEmpty(cnFilter))
@@ -146,11 +146,11 @@ public class ActiveDirectoryService
         if (!UseServiceAccount && string.IsNullOrEmpty(username))
         {
             // Fill in missing credentials with configured values
-            username = config.GetValue<string>("ActiveDirectory:Username")!;
-            password = config.GetValue<string>("ActiveDirectory:Password")!;
+            username = config.GetValue<string>("ActiveDirectory:Username");
+            password = config.GetValue<string>("ActiveDirectory:Password");
         }
 
-        using var rootEntry = new DirectoryEntry(config.GetValue<string>("ActiveDirectory:LdapUri")!, username, password, AuthenticationTypes.Secure);
+        using var rootEntry = new DirectoryEntry(config.GetValue<string>("ActiveDirectory:LdapUri"), username, password, AuthenticationTypes.Secure);
         using var searcher = new DirectorySearcher(rootEntry, $"(&(objectClass=User)(objectCategory=Person){userQuery})");
         
         // Convert searcher results to basic data model
@@ -158,11 +158,11 @@ public class ActiveDirectoryService
             .Cast<SearchResult>()
             .Select((it) => new ActiveDirectoryAccount()
             {
-                AccountName = it.Properties.GetOrDefault("samaccountname")!,
+                AccountName = it.Properties.GetOrDefault("samaccountname"),
                 // First name is always required, coalesce if necessary
-                FirstName = it.Properties.GetOrDefault("givenname") ?? it.Properties.GetOrDefault("samaccountname")!,
+                FirstName = it.Properties.GetOrDefault("givenname") ?? it.Properties.GetOrDefault("samaccountname"),
                 LastName = it.Properties.GetOrDefault("sn") ?? "",
-                CommonName = it.Properties.GetOrDefault("cn")!
+                CommonName = it.Properties.GetOrDefault("cn")
             })
             .ToList();
     }

@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace Jibini.SharedBase.Util.Services;
+namespace Jibini.SharedBase.Services;
 
 /// <summary>
 /// Provides PDf rendering for complex HTML layouts including Blazor components,
@@ -23,7 +23,7 @@ public class ChromiumPdfService : IPdfService
     /// <summary>
     /// Shared render function for HTML and URI content to PDF.
     /// </summary>
-    private async Task RenderPdfAsync(IBrowser browser, Stream result, bool isLandscape = false, int additionalDelay = 0, string? html = "", string? uri = "")
+    private async Task RenderPdfAsync(IBrowser browser, Stream result, bool isLandscape = false, int additionalDelay = 0, string html = "", string uri = "")
     {
         using var page = await browser.NewPageAsync();
         var margin = 0.35;

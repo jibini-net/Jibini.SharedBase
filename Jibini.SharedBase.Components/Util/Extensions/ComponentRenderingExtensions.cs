@@ -11,7 +11,8 @@ namespace Jibini.SharedBase.Util.Extensions;
 /// be used out of context as templated content.
 /// </summary>
 public interface IRenderable<TSelf>
-{ }
+{
+}
 
 public static class ComponentRenderingExtensions
 {
@@ -19,7 +20,7 @@ public static class ComponentRenderingExtensions
     /// Creates a duplicate component to render it to HTML, returning the outer
     /// HTML content. Components do not need to implement the method.
     /// </summary>
-    public static string ToHtml<T>(this IRenderable<T> it, IServiceProvider? serviceProvider = null)
+    public static string ToHtml<T>(this IRenderable<T> it, IServiceProvider serviceProvider = null)
         where T : IComponent
     {
         var renderer = new ComponentRenderer<T>();
@@ -40,7 +41,7 @@ public static class ComponentRenderingExtensions
             if (value is not null)
             {
                 var access = Expression.MakeMemberAccess(paramInfo, field);
-                var expr = Expression.Lambda<Func<T, object?>>(access, paramInfo);
+                var expr = Expression.Lambda<Func<T, object>>(access, paramInfo);
 
                 renderer.Set(expr, value);
             }

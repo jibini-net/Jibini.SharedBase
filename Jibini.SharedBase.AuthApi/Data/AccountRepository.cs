@@ -1,5 +1,5 @@
 ﻿using Jibini.SharedBase.Auth;
-using Jibini.SharedBase.Util.Services;
+using Jibini.SharedBase.Services;
 
 namespace Jibini.SharedBase.Data;
 
@@ -10,9 +10,9 @@ namespace Jibini.SharedBase.Data;
 /// </summary>
 public class AccountRepository
 {
-    private readonly DatabaseService database;
+    private readonly SqlDatabaseService database;
 
-    public AccountRepository(DatabaseService database)
+    public AccountRepository(SqlDatabaseService database)
     {
         this.database = database;
     }

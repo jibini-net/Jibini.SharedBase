@@ -1,7 +1,7 @@
 ﻿using Jibini.SharedBase.Controllers;
 using Microsoft.JSInterop;
 
-namespace Jibini.SharedBase.Util.Services;
+namespace Jibini.SharedBase.Services;
 
 /// <summary>
 /// Provides file downloads from within Blazor components. Redirects an embedded

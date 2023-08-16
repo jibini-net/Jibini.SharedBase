@@ -4,7 +4,7 @@ namespace Jibini.SharedBase.Middleware;
 
 public class ResultStatusWrapperFilter : IEndpointFilter
 {
-    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext _e, EndpointFilterDelegate next)
+    public async ValueTask<object> InvokeAsync(EndpointFilterInvocationContext _e, EndpointFilterDelegate next)
     {
         var e = _e.HttpContext;
         try
