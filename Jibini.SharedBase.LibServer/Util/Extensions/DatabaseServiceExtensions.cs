@@ -11,7 +11,7 @@ public static class DatabaseServiceExtensions
     /// Converts the provided object to a set of key-value argument pairs to
     /// provide to a stored procedure.
     /// </summary>
-    public static void AddArgs<TArgs>(this SqlParameterCollection coll, TArgs? args)
+    public static void AddArgs<TArgs>(this SqlParameterCollection coll, TArgs args)
     {
         if (args is null) return;
 

@@ -13,16 +13,16 @@ public class Account : IAccount
     [Required(ErrorMessage = "First name is required.")]
     public string FirstName { get; set; } = "";
     [MaxLength(50, ErrorMessage = "Last name cannot exceed 50 characters.")]
-    public string? LastName { get; set; }
+    public string LastName { get; set; }
     [MaxLength(50, ErrorMessage = "Email cannot exceed 50 characters.")]
     [Required(ErrorMessage = "Email is required.")]
     public string Email { get; set; } = "";
     [MaxLength(50, ErrorMessage = "Phone number cannot exceed 50 characters.")]
-    public string? CellNumber { get; set; }
+    public string CellNumber { get; set; }
     [MaxLength(50, ErrorMessage = "Phone number cannot exceed 50 characters.")]
-    public string? HomeNumber { get; set; }
-    public string? PasswordHash { get; set; }
-    public string? PasswordSalt { get; set; }
+    public string HomeNumber { get; set; }
+    public string PasswordHash { get; set; }
+    public string PasswordSalt { get; set; }
     public DateTime? PasswordSet { get; set; }
     public int? PasswordDuration { get; set; }
     public bool PasswordValid { get; set; }
@@ -59,10 +59,10 @@ public interface ISetAccount
 {
     int Id { get; set; }
     string FirstName { get; set; }
-    string? LastName { get; set; }
+    string LastName { get; set; }
     string Email { get; set; }
-    string? CellNumber { get; set; }
-    string? HomeNumber { get; set; }
+    string CellNumber { get; set; }
+    string HomeNumber { get; set; }
     int? PasswordDuration { get; set; }
     bool Enabled { get; set; }
 }
@@ -89,8 +89,8 @@ public class SearchAccount
 public interface ISetAccountPassword
 {
     int Id { get; set; }
-    string? PasswordHash { get; set; }
-    string? PasswordSalt { get; set; }
+    string PasswordHash { get; set; }
+    string PasswordSalt { get; set; }
 }
 
 /// <summary>
@@ -99,6 +99,6 @@ public interface ISetAccountPassword
 public class SetAccountPassword : ISetAccountPassword
 {
     public int Id { get; set; }
-    public string? PasswordHash { get; set; }
-    public string? PasswordSalt { get; set; }
+    public string PasswordHash { get; set; }
+    public string PasswordSalt { get; set; }
 }

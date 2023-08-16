@@ -3,7 +3,7 @@ using Jibini.SharedBase.Data;
 using Jibini.SharedBase.Data.Models;
 using Jibini.SharedBase.Util.Extensions;
 
-using BaseApp = Jibini.SharedBase.App;
+using BaseApp = Jibini.SharedBase.LibServer.App;
 BaseApp.StartupType = typeof(App);
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,4 +1,4 @@
-﻿namespace Jibini.SharedBase.Util.Services;
+﻿namespace Jibini.SharedBase.Services;
 
 /// <summary>
 /// Any service which can generate basic letter PDFs, whether via a local

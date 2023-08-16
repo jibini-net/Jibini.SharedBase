@@ -2,62 +2,14 @@
 @namespace Jibini.SharedBase.Auth.Pages
 @inject IHxMessengerService toasts
 @inject IHxMessageBoxService messages
-@inject AccountRepository accounts
 
-<EditForm Model="@stub"
-    Context="_"
-    class="mb-3">
+<PageTitle>Home</PageTitle>
 
-    <CustomSelect @bind-Selected="@selected"
-        AllowBlank="@true"
-        EqualsCheck="(a, b) => a?.Id == b?.Id">
-
-        @foreach (var it in allAccounts)
-        {
-            <CustomOption Value="@it">@it.Name (@it.Id)</CustomOption>
-        }
-
-    </CustomSelect>
-
-</EditForm>
-
-@if (selected is not null)
-{
-    <EditForm Model="@selected"
-        Context="_"
-        OnValidSubmit="() => { }">
-
-        <DataAnnotationsValidator />
-
-        <HxInputText @bind-Value="@selected!.FirstName"
-            Label="First Name"
-            ShowValidationMessage="@false"
-            InputSize="@InputSize.Small" />
-
-        <HxInputText @bind-Value="@selected!.LastName"
-            Label="Last Name"
-            ShowValidationMessage="@false"
-            CssClass="mb-2"
-            InputSize="@InputSize.Small" />
-
-        <HxSubmit Color="@ThemeColor.Primary">Validate</HxSubmit>
-
-    </EditForm>
-}
 
 @code {
-    private object stub = new { };
-
-    private List<Account> allAccounts = new();
-    private Account? selected;
-
-    private string text = "";
-
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        allAccounts.Add(accounts.Get(1)!);
-        allAccounts.Add(accounts.Get(5)!);
     }
 }

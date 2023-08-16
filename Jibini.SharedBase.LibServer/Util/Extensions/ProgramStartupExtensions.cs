@@ -1,6 +1,6 @@
 ﻿using Havit.Blazor.Components.Web;
 using Jibini.SharedBase.Data.Models;
-using Jibini.SharedBase.Util.Services;
+using Jibini.SharedBase.Services;
 
 namespace Jibini.SharedBase.Util.Extensions;
 
@@ -27,12 +27,11 @@ public static class ProgramStartupExtensions
         services.AddHxMessenger();
         services.AddHxMessageBoxHost();
 
-        services.AddSingleton<DatabaseService>();
+        services.AddSingleton<SqlDatabaseService>();
         services.AddSingleton<ChromiumPdfService>();
         services.AddSingleton<IPdfService>((sp) => sp.GetService<ChromiumPdfService>()!);
         services.AddSingleton<ActiveDirectoryService>();
         services.AddScoped<DownloadService>();
-        services.AddScoped<WinnovativePdfService>();
 
         // Register default sidebar nav configuration
         services.Configure<SiteNavConfiguration>((it) =>

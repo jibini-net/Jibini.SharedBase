@@ -3,18 +3,18 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Text;
 
-namespace Jibini.SharedBase.Util.Services;
+namespace Jibini.SharedBase.Services;
 
 /// <summary>
 /// Singleton database service which allows access to call stored procedures in
 /// configured databases. Configure SQL Server database connection strings in
 /// the application's settings file and reference them by name.
 /// </summary>
-public class DatabaseService
+public class SqlDatabaseService
 {
     private readonly IConfiguration config;
 
-    public DatabaseService(IConfiguration config)
+    public SqlDatabaseService(IConfiguration config)
     {
         this.config = config;
     }
@@ -22,9 +22,7 @@ public class DatabaseService
     /// <summary>
     /// Invokes a stored procedure with optional arguments, returning no value.
     /// </summary>
-    public void CallProc<TArgs>(string name,
-        TArgs? args = default,
-        string db = "DefaultConnection")
+    public void CallProc<TArgs>(string name, TArgs args = default, string db = "DefaultConnection")
     {
         using var conn = new SqlConnection(config.GetConnectionString(db));
         conn.Open();
@@ -41,9 +39,7 @@ public class DatabaseService
     /// Invokes a stored procedure with optional arguments, returning a set of
     /// each result row's first columns parsed to JSON.
     /// </summary>
-    public TResult? CallProcForJson<TArgs, TResult>(string name,
-        TArgs? args = default,
-        string db = "DefaultConnection")
+    public TResult CallProcForJson<TArgs, TResult>(string name, TArgs args = default, string db = "DefaultConnection")
     {
         using var conn = new SqlConnection(config.GetConnectionString(db));
         conn.Open();
@@ -59,7 +55,6 @@ public class DatabaseService
         {
             json.Append(results[0].ToString());
         }
-
         return json.ToString().ParseTo<TResult>();
     }
 }
